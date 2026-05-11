@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0B0F0C;
+  --color-surface: #111827;
+  --color-surface-light: #1a2332;
+  --color-accent: #39FF14;
+  --color-accent-dim: #2CBF10;
+  --color-accent-glow: rgba(57, 255, 20, 0.15);
+  --color-accent-subtle: rgba(57, 255, 20, 0.06);
+  --color-text: #E8E8E8;
+  --color-text-dim: rgba(255, 255, 255, 0.5);
+  --color-text-dimmer: rgba(255, 255, 255, 0.3);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.04);
+  --color-danger: #EF4444;
+  --color-success: #39FF14;
+  --color-warning: #F59E0B;
+
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --font-sans: "Geist", system-ui, sans-serif;
+
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-fade-up: fade-up 0.5s ease-out;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+[data-theme="light"] {
+  --color-background: #F0EDE6;
+  --color-surface: #E8E4DC;
+  --color-surface-light: #DDD8CF;
+  --color-accent: #2A8F0A;
+  --color-accent-dim: #237508;
+  --color-accent-glow: rgba(42, 143, 10, 0.15);
+  --color-accent-subtle: rgba(42, 143, 10, 0.06);
+  --color-text: #1A1A18;
+  --color-text-dim: #6B6560;
+  --color-text-dimmer: rgba(0, 0, 0, 0.35);
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-light: rgba(0, 0, 0, 0.06);
+  --color-danger: #DC2626;
+  --color-success: #2A8F0A;
+  --color-warning: #D97706;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px rgba(57, 255, 20, 0.1); }
+  to { box-shadow: 0 0 25px rgba(57, 255, 20, 0.25); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: "Geist", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-accent-glow);
+  color: var(--color-text);
+}
