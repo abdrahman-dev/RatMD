@@ -67,6 +67,10 @@ export function LoginPage() {
               />
             </div>
 
+            <Link to="/forgot-password" className="text-xs text-text-dim font-mono hover:text-accent transition-colors block">
+              Forgot password?
+            </Link>
+
             {error && (
               <p className="text-xs text-danger font-mono">{error}</p>
             )}

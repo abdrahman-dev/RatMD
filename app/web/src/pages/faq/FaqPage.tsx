@@ -27,7 +27,7 @@ const faqData: FaqCategory[] = [
       },
       {
         q: 'Do I need an account?',
-        a: 'No. RatMD is fully functional without an account. All processing is client-side. There is no signup, no login, no data collection.',
+        a: 'No account needed to convert PDFs — RatMD works fully in your browser. Sign in to track your conversion history, view your total token savings, and appear on the community leaderboard.',
       },
       {
         q: 'Is RatMD free?',

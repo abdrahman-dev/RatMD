@@ -15,6 +15,8 @@ export function Footer() {
             <span className="text-text-dimmer text-xs font-mono">
               <span className="text-accent">// v0.1.0</span>
               <span className="text-text-dimmer"> — mvp</span>
+              <span className="ml-2 text-success">●</span>
+              <span className="text-text-dimmer ml-1">browser</span>
             </span>
           </Link>
 

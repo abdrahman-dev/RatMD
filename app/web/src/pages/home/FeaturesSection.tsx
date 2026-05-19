@@ -16,7 +16,7 @@ export function FeaturesSection() {
   return (
     <Section id="features" background="surface">
       <div className="text-center mb-12">
-        <AnimatedElement>
+        <AnimatedElement direction="right">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
             Built for developers
           </h2>
@@ -28,7 +28,7 @@ export function FeaturesSection() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {FEATURES.map((feature: { title: string; description: string; icon: string }, i: number) => (
-          <AnimatedElement key={feature.title} delay={i * 0.05}>
+          <AnimatedElement key={feature.title} delay={i * 0.05} direction={i % 2 === 0 ? 'left' : 'right'}>
             <Card className="p-5 h-full hover:border-accent/30 hover:-translate-y-0.5 transition-all duration-300">
               <div className="flex items-start gap-4">
                 <span className="text-lg font-mono text-text-dim mt-0.5 shrink-0">

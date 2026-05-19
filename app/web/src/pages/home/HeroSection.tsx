@@ -2,15 +2,55 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
+import { LogoIcon } from '@/components/ui/logo'
 import { ROUTES } from '@/lib/constants'
 
-const ratStages = ['PDF', '🐀', '.md']
+const floatingWords = [
+  'tokens', 'RAG', 'context', '.pdf', 'embed', 'chunk',
+  'llm', 'markdown', 'vector', 'parse', 'optimize', 'clean',
+]
+
+function FloatingText({ word, index }: { word: string; index: number }) {
+  const startX = (index * 8.3) % 100
+  const duration = 6 + (index % 5) * 0.8
+  const delay = index * 0.7
+
+  return (
+    <motion.span
+      className="absolute font-mono text-xs text-text-dimmer pointer-events-none select-none"
+      style={{
+        left: `${startX}%`,
+        bottom: '-20px',
+      }}
+      initial={{ y: 60, opacity: 0 }}
+      animate={{
+        y: -60,
+        opacity: [0, 0.15, 0],
+      }}
+      transition={{
+        duration,
+        delay,
+        repeat: Infinity,
+        ease: 'linear',
+      }}
+    >
+      {word}
+    </motion.span>
+  )
+}
 
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden pt-20 pb-16 sm:pt-28 sm:pb-20">
       <div className="absolute inset-0 bg-gradient-to-b from-accent-subtle via-transparent to-transparent pointer-events-none" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-surface rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Floating text fragments */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {floatingWords.map((word, i) => (
+          <FloatingText key={word} word={word} index={i} />
+        ))}
+      </div>
 
       <Container className="relative">
         <div className="flex flex-col items-center text-center gap-6 max-w-3xl mx-auto">
@@ -38,23 +78,29 @@ export function HeroSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex items-center gap-3 sm:gap-4 text-2xl sm:text-3xl font-mono"
+            className="flex items-center gap-3 sm:gap-4 text-2xl sm:text-3xl font-mono text-text-dim"
           >
-            {ratStages.map((stage, i) => (
-              <motion.span
-                key={stage}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 + i * 0.15 }}
-                className={
-                  i === 0
-                    ? 'text-text-dim'
-                    : 'text-text-dim'
-                }
-              >
-                {stage}
-              </motion.span>
-            ))}
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              PDF
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.35 }}
+            >
+              <LogoIcon size={32} />
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+            >
+              .md
+            </motion.span>
           </motion.div>
 
           {/* Headline */}
@@ -65,7 +111,13 @@ export function HeroSection() {
             className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text font-sans leading-tight"
           >
             Turn bloated PDFs into{' '}
-            <span className="text-accent">clean AI-ready</span> Markdown.
+            <span
+              className="text-accent"
+              style={{ textShadow: '0 0 40px var(--color-accent-glow)' }}
+            >
+              clean AI-ready
+            </span>{' '}
+            Markdown.
           </motion.h1>
 
           {/* Subheadline */}

@@ -28,7 +28,7 @@ export function DemoSection() {
   return (
     <Section id="demo" background="surface">
       <div className="text-center mb-12">
-        <AnimatedElement>
+        <AnimatedElement direction="right">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
             See it in action
           </h2>

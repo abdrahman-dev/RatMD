@@ -24,7 +24,7 @@ export function TokenSavingsSection() {
   return (
     <Section id="token-savings">
       <div className="text-center mb-12">
-        <AnimatedElement>
+        <AnimatedElement direction="left">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
             Token savings that matter
           </h2>

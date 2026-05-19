@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { AnimatedElement } from '@/components/animations/AnimatedElement'
 import { Section } from '@/components/shared/Section'
 import { Card } from '@/components/ui/Card'
@@ -13,7 +14,7 @@ export function CLIPreviewSection() {
   return (
     <Section id="cli" background="surface">
       <div className="text-center mb-12">
-        <AnimatedElement>
+        <AnimatedElement direction="left">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
             CLI-first workflow
           </h2>
@@ -50,6 +51,13 @@ export function CLIPreviewSection() {
                 </div>
               </AnimatedElement>
             ))}
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              className="text-accent font-mono text-sm"
+            >
+              █
+            </motion.span>
           </div>
         </Card>
       </div>

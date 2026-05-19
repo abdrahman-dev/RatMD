@@ -6,7 +6,7 @@ export function HowItWorksSection() {
   return (
     <Section id="how-it-works">
       <div className="text-center mb-12">
-        <AnimatedElement>
+        <AnimatedElement direction="right">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
             How it works
           </h2>
@@ -22,7 +22,7 @@ export function HowItWorksSection() {
 
         <div className="space-y-8">
           {HOW_IT_WORKS.map((step: { number: number; title: string; description: string }, i: number) => (
-            <AnimatedElement key={step.number} delay={i * 0.08} direction="left">
+            <AnimatedElement key={step.number} delay={i * 0.08} direction={i % 2 === 0 ? 'left' : 'right'}>
               <div className="relative flex items-start gap-6 pl-0 sm:pl-14">
                 {/* Number */}
                 <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-surface border border-border font-mono text-sm text-text-dim shrink-0">

@@ -14,7 +14,7 @@
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-light: rgba(255, 255, 255, 0.04);
   --color-danger: #EF4444;
-  --color-success: #39FF14;
+  --color-success: #22C55E;
   --color-warning: #F59E0B;
 
   --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
@@ -41,7 +41,7 @@
   --color-border: rgba(0, 0, 0, 0.1);
   --color-border-light: rgba(0, 0, 0, 0.06);
   --color-danger: #DC2626;
-  --color-success: #2A8F0A;
+  --color-success: #16A34A;
   --color-warning: #D97706;
 }
 

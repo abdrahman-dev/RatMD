@@ -9,7 +9,7 @@ interface SectionProps {
   background?: 'default' | 'surface' | 'accent-subtle'
 }
 
-export function Section({ children, className, id, background = 'default' }: SectionProps) {
+export function Section({ children, id, background = 'default' }: SectionProps) {
   return (
     <section
       id={id}
@@ -17,7 +17,6 @@ export function Section({ children, className, id, background = 'default' }: Sec
         'py-16 sm:py-20 lg:py-24',
         background === 'surface' && 'bg-surface/30',
         background === 'accent-subtle' && 'bg-accent-subtle',
-        className,
       )}
     >
       <Container>{children}</Container>
