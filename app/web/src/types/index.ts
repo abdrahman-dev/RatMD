@@ -42,3 +42,54 @@ export interface StepItem {
   title: string
   description: string
 }
+
+export interface AuthUser {
+  name: string
+  email: string
+  avatar: string
+  ratRank: string
+  totalTokensSaved: number
+  totalConversions: number
+  bio: string
+  github: string
+  linkedin: string
+}
+
+export interface ApiResponse<T> {
+  success: boolean
+  message?: string
+  data?: T
+}
+
+export interface ConversionSavePayload {
+  filename: string
+  originalTokens: number
+  optimizedTokens: number
+  savingsPercent: number
+}
+
+export interface ConversionHistoryItem {
+  _id: string
+  userId: string
+  filename: string
+  originalTokens: number
+  optimizedTokens: number
+  savingsPercent: number
+  createdAt: string
+}
+
+export interface ConversionStats {
+  totalTokensSaved: number
+  totalConversions: number
+  avgSavingsPercent: number
+  ratRank: string
+  avatar: string
+}
+
+export interface LeaderboardEntry {
+  name: string
+  avatar: string
+  ratRank: string
+  totalTokensSaved: number
+  totalConversions: number
+}

@@ -11,6 +11,11 @@ export const ROUTES = {
   converter: '/converter',
   docs: '/docs',
   faq: '/faq',
+  login: '/login',
+  register: '/register',
+  verifyEmail: '/verify-email',
+  dashboard: '/dashboard',
+  profile: '/profile',
 } as const
 
 export const NAV_LINKS = [

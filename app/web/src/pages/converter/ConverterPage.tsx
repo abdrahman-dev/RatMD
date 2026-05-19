@@ -1,5 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
 import { UploadZone } from '@/features/upload/UploadZone'
@@ -9,10 +10,17 @@ import { TokenEstimator } from '@/features/token-estimator/TokenEstimator'
 import { ExportActions } from '@/features/export/ExportActions'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useAppStore } from '@/app/store/app-store'
+import { useAuthStore } from '@/app/store/auth-store'
+import { client } from '@/lib/api/client'
+import { CONVERSIONS } from '@/lib/api/endpoints'
+import { ROUTES } from '@/lib/constants'
 
 export function ConverterPage() {
   const upload = useFileUpload()
   const { conversion, isConverting, error, convert } = useAppStore()
+  const { isAuthenticated } = useAuthStore()
+  const [saveBannerDismissed, setSaveBannerDismissed] = useState(false)
+  const hasSavedRef = useRef<string | null>(null)
 
   const handleConvert = useCallback(async () => {
     if (!upload.file) return
@@ -22,7 +30,25 @@ export function ConverterPage() {
   const handleReset = useCallback(() => {
     upload.reset()
     useAppStore.getState().reset()
+    setSaveBannerDismissed(false)
+    hasSavedRef.current = null
   }, [upload])
+
+  useEffect(() => {
+    if (!isAuthenticated || !conversion) return
+    const key = `${conversion.fileName}-${conversion.timestamp}`
+    if (hasSavedRef.current === key) return
+    hasSavedRef.current = key
+
+    client.post(CONVERSIONS.save, {
+      filename: conversion.fileName,
+      originalTokens: conversion.estimation.originalTokens,
+      optimizedTokens: conversion.estimation.optimizedTokens,
+      savingsPercent: conversion.estimation.savingsPercentage,
+    }).catch(() => {
+      // Silently fail — conversion result is already shown
+    })
+  }, [isAuthenticated, conversion])
 
   return (
     <Container className="py-10">
@@ -75,6 +101,28 @@ export function ConverterPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-4"
               >
+                {!isAuthenticated && !saveBannerDismissed && (
+                  <div className="bg-surface border border-border px-4 py-3 flex items-center justify-between gap-3">
+                    <p className="text-xs text-text-dim font-mono">
+                      Sign in to track your savings
+                    </p>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Link
+                        to={ROUTES.login}
+                        className="text-xs text-accent font-mono hover:underline"
+                      >
+                        Sign In
+                      </Link>
+                      <button
+                        onClick={() => setSaveBannerDismissed(true)}
+                        className="text-xs text-text-dimmer font-mono hover:text-text-dim cursor-pointer"
+                        aria-label="Dismiss"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <TokenEstimator
                   originalTokens={conversion.estimation.originalTokens}
                   optimizedTokens={conversion.estimation.optimizedTokens}
