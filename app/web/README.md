@@ -1,6 +1,6 @@
 # RatMD Frontend
 
-React 19 SPA for PDF-to-Markdown conversion with auth, dashboard, and community features.
+React 19 SPA for PDF-to-Markdown conversion with auth, dashboard, community features, animated background, light/dark theme, and a rat rank system.
 
 ## Stack
 

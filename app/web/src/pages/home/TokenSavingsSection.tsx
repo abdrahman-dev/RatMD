@@ -26,10 +26,10 @@ export function TokenSavingsSection() {
       <div className="text-center mb-12">
         <AnimatedElement direction="left">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
-            Token savings that matter
+            Your AI deserves better input
           </h2>
           <p className="text-text-dim font-mono text-sm">
-            Real reduction. Lower costs. Faster LLM processing.
+            Less noise. More signal. Lower API bills.
           </p>
         </AnimatedElement>
       </div>
@@ -86,7 +86,7 @@ export function TokenSavingsSection() {
 
       <AnimatedElement delay={0.2}>
         <p className="text-center text-xs font-mono text-text-dimmer mt-8">
-          Based on typical PDF documents. Your savings may vary.
+          Results vary by PDF type. Dense docs save more.
         </p>
       </AnimatedElement>
     </Section>

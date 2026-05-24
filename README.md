@@ -31,7 +31,12 @@ The backend provides user accounts, conversion history tracking, community leade
 
 - **PDF parsing** — text extraction via pdfjs-dist v5 with line grouping and heading detection
 - **Token estimation** — real `cl100k_base` encoding via js-tiktoken, not approximate math
-- **Auth & Community** — JWT-based auth with httpOnly cookies, email verification via OTP, conversion tracking, rat ranks, leaderboards, user profiles
+- **Auth system** — JWT-based auth with httpOnly cookies, email verification via OTP, password reset
+- **Dashboard** — user stats, conversion history with pagination
+- **Profile** — avatar picker, bio, GitHub, LinkedIn, social links
+- **Community leaderboard** — top 20 users ranked by tokens saved
+- **Rat ranks** — automatic rank progression from Rookie Rat to Rat King
+- **Animated background** — canvas-based particle system with theme-aware palette
 - **Light/dark theme** — warm parchment light mode, dark-first default, persisted in localStorage
 - **Mobile navigation** — hamburger menu with animated dropdown on screens < 768px
 - **FAQ page** — 18 questions across 6 categories with accordion expand/collapse
@@ -196,7 +201,7 @@ The Docker image serves the built static app via Nginx.
 - [x] Auth system — JWT with httpOnly cookies, email verification, password reset
 - [x] Dashboard — user stats, conversion history with pagination
 - [x] Profile — avatar picker, bio, social links
-- [ ] Community leaderboard UI
+- [x] Community leaderboard UI
 - [ ] Server-side parsing — offload heavy processing to a worker service
 - [ ] CLI tool — standalone binary for terminal workflows (`ratmd convert file.pdf`)
 - [ ] Batch processing — convert multiple PDFs in a single operation

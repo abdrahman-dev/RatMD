@@ -10,10 +10,10 @@ export function Card({ children, className, variant = 'default', ...props }: Car
   return (
     <div
       className={cn(
-        'rounded-lg',
-        variant === 'default' && 'bg-surface border border-border',
-        variant === 'elevated' && 'bg-surface border border-border shadow-lg shadow-black/20',
-        variant === 'bordered' && 'bg-transparent border border-border',
+        'rounded-none',
+        variant === 'default' && 'bg-surface border border-border hover:border-border-light transition-colors duration-150',
+        variant === 'elevated' && 'bg-surface border border-border hover:border-border-light transition-colors duration-150',
+        variant === 'bordered' && 'bg-transparent border border-border hover:border-border-light transition-colors duration-150',
         className,
       )}
       {...props}

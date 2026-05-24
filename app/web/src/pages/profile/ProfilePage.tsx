@@ -28,7 +28,7 @@ export function ProfilePage() {
     try {
       await updateProfile({ name, bio, github, linkedin, avatar })
       setMessageType('success')
-      setMessage('Profile updated successfully')
+      setMessage('Looking good. Changes saved.')
     } catch (err: unknown) {
       setMessageType('error')
       setMessage(err instanceof Error ? err.message : 'Failed to update profile')
@@ -47,16 +47,18 @@ export function ProfilePage() {
         transition={{ duration: 0.3 }}
         className="space-y-6"
       >
-        <h1 className="text-2xl font-bold text-text font-sans">Profile</h1>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-text font-sans">Your profile</h1>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           {/* Avatar selection */}
-          <div className="bg-surface border border-border p-6" style={{ borderRadius: '4px' }}>
+          <div className="bg-surface border border-border p-6" >
             <label className="block text-xs font-mono text-text-dim mb-4">Avatar</label>
             <div className="flex flex-col items-center gap-4">
               <span
                 className="w-16 h-16 flex items-center justify-center bg-accent/10 text-accent text-2xl font-mono font-bold border border-accent/20"
-                style={{ borderRadius: '4px' }}
+                
               >
                 {AVATAR_OPTIONS.find((a) => a.id === avatar)?.label ?? avatarInitial}
               </span>
@@ -71,7 +73,7 @@ export function ProfilePage() {
                         ? 'bg-accent/10 text-accent border-accent'
                         : 'bg-surface text-text-dim border-border hover:border-text-dim'
                     }`}
-                    style={{ borderRadius: '4px' }}
+                    
                     aria-label={`Select ${opt.id} avatar`}
                   >
                     {opt.label}
@@ -91,8 +93,7 @@ export function ProfilePage() {
               type="text"
               value={name}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-              className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
               required
             />
           </div>
@@ -108,8 +109,7 @@ export function ProfilePage() {
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)}
               maxLength={160}
               rows={3}
-              className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent resize-none"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent resize-none"
               placeholder="Tell us about yourself..."
             />
             <p className="text-xs font-mono text-text-dimmer mt-1 text-right">{bio.length}/160</p>
@@ -125,8 +125,7 @@ export function ProfilePage() {
               type="url"
               value={github}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setGithub(e.target.value)}
-              className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
               placeholder="https://github.com/username"
             />
           </div>
@@ -141,8 +140,7 @@ export function ProfilePage() {
               type="url"
               value={linkedin}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setLinkedin(e.target.value)}
-              className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
               placeholder="https://linkedin.com/in/username"
             />
           </div>
@@ -152,10 +150,9 @@ export function ProfilePage() {
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-accent text-background font-mono font-medium text-sm px-5 py-2.5 hover:bg-accent-dim transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-accent text-bg font-mono font-medium text-sm px-5 py-2 hover:bg-accent-dim transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {saving ? 'Saving...' : 'Save Changes'}
+              {saving ? 'Saving...' : 'Save changes'}
             </button>
 
             {message && (

@@ -101,10 +101,9 @@ export function VerifyEmailPage() {
         className="w-full max-w-md"
       >
         <div className="bg-surface border border-border p-6 sm:p-8">
-          <h1 className="text-2xl font-bold text-text font-sans mb-1">Verify your email</h1>
+          <h1 className="text-2xl font-bold text-text font-sans mb-1">Check your inbox</h1>
           <p className="text-sm text-text-dim font-mono mb-6">
-            Enter the 6-digit code sent to{' '}
-            <span className="text-text">{email || 'your email'}</span>
+            We sent you a code. Paste it below and you're in.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -118,8 +117,7 @@ export function VerifyEmailPage() {
                   type="email"
                   value={email}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                  className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-                  style={{ borderRadius: '4px' }}
+                  className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
                   required
                   autoComplete="email"
                 />
@@ -141,8 +139,7 @@ export function VerifyEmailPage() {
                     value={digit}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                    className="w-10 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-mono bg-surface border border-border text-text focus:outline-none focus:border-accent"
-                    style={{ borderRadius: '4px' }}
+                    className="w-10 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-mono bg-bg border border-border text-text focus:outline-none focus:border-accent"
                     aria-label={`Digit ${index + 1}`}
                   />
                 ))}
@@ -160,8 +157,7 @@ export function VerifyEmailPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-accent text-background font-mono font-medium text-sm px-5 py-2.5 hover:bg-accent-dim transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-accent text-bg font-mono font-medium text-sm px-5 py-2 hover:bg-accent-dim transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isLoading ? 'Verifying...' : 'Verify Email'}
             </button>

@@ -70,23 +70,23 @@ export function DashboardPage() {
     return (
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 shrink-0 bg-surface border border-border animate-pulse" style={{ borderRadius: '4px' }} />
+          <div className="w-16 h-16 shrink-0 bg-surface border border-border animate-pulse" />
           <div className="space-y-2 min-w-0">
-            <div className="w-full max-w-[200px] h-6 bg-surface border border-border animate-pulse" style={{ borderRadius: '4px' }} />
-            <div className="w-24 h-4 bg-surface border border-border animate-pulse" style={{ borderRadius: '4px' }} />
+            <div className="w-full max-w-[200px] h-6 bg-surface border border-border animate-pulse" />
+            <div className="w-24 h-4 bg-surface border border-border animate-pulse" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-surface border border-border p-6 animate-pulse" style={{ borderRadius: '4px' }}>
-              <div className="w-20 h-4 bg-border mb-3" style={{ borderRadius: '4px' }} />
-              <div className="w-32 h-8 bg-border" style={{ borderRadius: '4px' }} />
+            <div key={i} className="bg-surface border border-border p-6 animate-pulse">
+              <div className="w-20 h-4 bg-border mb-3" />
+              <div className="w-32 h-8 bg-border" />
             </div>
           ))}
         </div>
-        <div className="bg-surface border border-border p-6 animate-pulse" style={{ borderRadius: '4px' }}>
+        <div className="bg-surface border border-border p-6 animate-pulse">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-10 bg-border mb-2" style={{ borderRadius: '4px' }} />
+            <div key={i} className="h-10 bg-border mb-2"  />
           ))}
         </div>
       </div>
@@ -105,13 +105,13 @@ export function DashboardPage() {
         <div className="flex items-center gap-4">
           <span
             className="w-16 h-16 shrink-0 flex items-center justify-center bg-accent/10 text-accent text-2xl font-mono font-bold border border-accent/20"
-            style={{ borderRadius: '4px' }}
+            
           >
             {avatarInitial}
           </span>
           <div className="min-w-0">
             <h1 className="text-xl sm:text-2xl font-bold text-text font-sans truncate">
-              Welcome back, {user?.name}
+              Hey {user?.name}, here's your impact
             </h1>
             <span className="text-sm font-mono text-accent">{stats?.ratRank ?? user?.ratRank}</span>
           </div>
@@ -119,35 +119,35 @@ export function DashboardPage() {
 
         {/* Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-surface border border-border p-6" style={{ borderRadius: '4px' }}>
+          <div className="bg-surface border border-border p-6" >
             <p className="text-xs font-mono text-text-dim mb-2">Total Tokens Saved</p>
-            <p className="text-2xl font-mono font-bold text-accent">
+            <p className="text-3xl font-mono font-bold text-accent">
               {formatNumber(stats?.totalTokensSaved ?? 0)}
             </p>
           </div>
-          <div className="bg-surface border border-border p-6" style={{ borderRadius: '4px' }}>
+          <div className="bg-surface border border-border p-6" >
             <p className="text-xs font-mono text-text-dim mb-2">Total Conversions</p>
-            <p className="text-2xl font-mono font-bold text-accent">
+            <p className="text-3xl font-mono font-bold text-accent">
               {formatNumber(stats?.totalConversions ?? 0)}
             </p>
           </div>
-          <div className="bg-surface border border-border p-6" style={{ borderRadius: '4px' }}>
+          <div className="bg-surface border border-border p-6" >
             <p className="text-xs font-mono text-text-dim mb-2">Avg Savings %</p>
-            <p className="text-2xl font-mono font-bold text-accent">
+            <p className="text-3xl font-mono font-bold text-accent">
               {stats?.avgSavingsPercent ?? 0}%
             </p>
           </div>
         </div>
 
         {/* Conversion history */}
-        <div className="bg-surface border border-border" style={{ borderRadius: '4px' }}>
+        <div className="bg-surface border border-border" >
           <div className="px-4 sm:px-6 py-4 border-b border-border">
             <h2 className="text-lg font-mono font-bold text-text">Conversion History</h2>
           </div>
 
           {history.length === 0 ? (
             <div className="px-4 sm:px-6 py-12 text-center">
-              <p className="text-sm font-mono text-text-dim">No conversions yet. Upload a PDF to get started.</p>
+              <p className="text-sm font-mono text-text-dim">No conversions yet — drop a PDF in the converter to get started.</p>
             </div>
           ) : (
             <>

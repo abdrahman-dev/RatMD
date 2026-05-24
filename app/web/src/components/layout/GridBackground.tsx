@@ -20,11 +20,13 @@ export function GridBackground() {
     }
 
     function resize() {
+      if (!canvas || !ctx) return
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
     }
 
     function draw() {
+      if (!canvas || !ctx) return
       const newColor = getBorderColor()
       if (newColor !== currentBorderColor) {
         currentBorderColor = newColor

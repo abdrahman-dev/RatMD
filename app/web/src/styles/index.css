@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0B0F0C;
-  --color-surface: #111827;
-  --color-surface-light: #1a2332;
+  --color-bg: #080B09;
+  --color-surface: #0F1410;
+  --color-surface-elevated: #161C17;
   --color-accent: #39FF14;
   --color-accent-dim: #2CBF10;
-  --color-accent-glow: rgba(57, 255, 20, 0.15);
-  --color-accent-subtle: rgba(57, 255, 20, 0.06);
-  --color-text: #E8E8E8;
-  --color-text-dim: rgba(255, 255, 255, 0.5);
-  --color-text-dimmer: rgba(255, 255, 255, 0.3);
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-light: rgba(255, 255, 255, 0.04);
-  --color-danger: #EF4444;
+  --color-accent-glow: rgba(57, 255, 20, 0.12);
+  --color-accent-subtle: rgba(57, 255, 20, 0.05);
+  --color-text: #F0F0EE;
+  --color-text-dim: #525252;
+  --color-text-dimmer: #2E2E2E;
+  --color-border: #1C1C1C;
+  --color-border-light: #141414;
   --color-success: #22C55E;
   --color-warning: #F59E0B;
+  --color-danger: #EF4444;
 
-  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-sans: "Geist", system-ui, sans-serif;
 
   --animate-fade-in: fade-in 0.5s ease-out;
@@ -28,21 +28,21 @@
 }
 
 [data-theme="light"] {
-  --color-background: #F0EDE6;
-  --color-surface: #E8E4DC;
-  --color-surface-light: #DDD8CF;
-  --color-accent: #2A8F0A;
-  --color-accent-dim: #237508;
-  --color-accent-glow: rgba(42, 143, 10, 0.15);
-  --color-accent-subtle: rgba(42, 143, 10, 0.06);
-  --color-text: #1A1A18;
-  --color-text-dim: #6B6560;
-  --color-text-dimmer: rgba(0, 0, 0, 0.35);
-  --color-border: rgba(0, 0, 0, 0.1);
-  --color-border-light: rgba(0, 0, 0, 0.06);
-  --color-danger: #DC2626;
+  --color-bg: #F7F5F0;
+  --color-surface: #EDEAE3;
+  --color-surface-elevated: #E4E0D8;
+  --color-accent: #1A7A05;
+  --color-accent-dim: #155E04;
+  --color-accent-glow: rgba(26, 122, 5, 0.12);
+  --color-accent-subtle: rgba(26, 122, 5, 0.05);
+  --color-text: #0A0A0A;
+  --color-text-dim: #737373;
+  --color-text-dimmer: #A3A3A3;
+  --color-border: #D4D0C8;
+  --color-border-light: #E0DDD6;
   --color-success: #16A34A;
   --color-warning: #D97706;
+  --color-danger: #DC2626;
 }
 
 @keyframes fade-in {
@@ -77,7 +77,7 @@
 
 body {
   margin: 0;
-  background-color: var(--color-background);
+  background-color: var(--color-bg);
   color: var(--color-text);
   font-family: "Geist", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

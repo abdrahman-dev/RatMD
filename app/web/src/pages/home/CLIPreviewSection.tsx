@@ -16,10 +16,10 @@ export function CLIPreviewSection() {
       <div className="text-center mb-12">
         <AnimatedElement direction="left">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
-            CLI-first workflow
+            Coming to a terminal near you
           </h2>
           <p className="text-text-dim font-mono text-sm">
-            Use from your terminal. Pipe into LLMs directly.
+            The CLI is in the works. Web app is live right now.
           </p>
         </AnimatedElement>
       </div>
@@ -64,7 +64,7 @@ export function CLIPreviewSection() {
 
       <AnimatedElement delay={0.3}>
         <p className="text-center text-xs font-mono text-text-dimmer mt-6">
-          CLI tools coming soon. Web version available now.
+          ⚡ Web app is live. CLI dropping soon.
         </p>
       </AnimatedElement>
     </Section>

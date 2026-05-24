@@ -32,7 +32,7 @@ export function LoginPage() {
       >
         <div className="bg-surface border border-border p-6 sm:p-8">
           <h1 className="text-2xl font-bold text-text font-sans mb-1">Welcome back</h1>
-          <p className="text-sm text-text-dim font-mono mb-6">Sign in to your RatMD account</p>
+          <p className="text-sm text-text-dim font-mono mb-6">Good to see you again</p>
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
@@ -44,8 +44,7 @@ export function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-                style={{ borderRadius: '4px' }}
+                className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
                 required
                 autoComplete="email"
               />
@@ -60,8 +59,7 @@ export function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-                style={{ borderRadius: '4px' }}
+                className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
                 required
                 autoComplete="current-password"
               />
@@ -78,10 +76,9 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-accent text-background font-mono font-medium text-sm px-5 py-2.5 hover:bg-accent-dim transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-accent text-bg font-mono font-medium text-sm px-5 py-2 hover:bg-accent-dim transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? 'Loading...' : "Let's go"}
             </button>
           </form>
 

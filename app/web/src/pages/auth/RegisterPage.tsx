@@ -32,8 +32,8 @@ export function RegisterPage() {
         className="w-full max-w-md"
       >
         <div className="bg-surface border border-border p-6 sm:p-8">
-          <h1 className="text-2xl font-bold text-text font-sans mb-1">Create account</h1>
-          <p className="text-sm text-text-dim font-mono mb-6">Join RatMD and track your token savings</p>
+          <h1 className="text-2xl font-bold text-text font-sans mb-1">Join the pack 🐀</h1>
+          <p className="text-sm text-text-dim font-mono mb-6">Track your savings. Climb the leaderboard. Be a Rat.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
@@ -45,8 +45,7 @@ export function RegisterPage() {
                 type="text"
                 value={name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-                style={{ borderRadius: '4px' }}
+                className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
                 required
                 autoComplete="name"
               />
@@ -61,8 +60,7 @@ export function RegisterPage() {
                 type="email"
                 value={email}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-                style={{ borderRadius: '4px' }}
+                className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
                 required
                 autoComplete="email"
               />
@@ -77,8 +75,7 @@ export function RegisterPage() {
                 type="password"
                 value={password}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                className="w-full bg-surface border border-border text-text font-mono text-sm px-3 py-2.5 focus:outline-none focus:border-accent"
-                style={{ borderRadius: '4px' }}
+                className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
                 required
                 autoComplete="new-password"
               />
@@ -94,15 +91,14 @@ export function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-accent text-background font-mono font-medium text-sm px-5 py-2.5 hover:bg-accent-dim transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              style={{ borderRadius: '4px' }}
+              className="w-full bg-accent text-bg font-mono font-medium text-sm px-5 py-2 hover:bg-accent-dim transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {isLoading ? 'Creating account...' : 'Create Account'}
+              {isLoading ? 'Creating...' : 'Create my account'}
             </button>
           </form>
 
           <p className="mt-6 text-center text-xs text-text-dim font-mono">
-            Already have an account?{' '}
+            Already one of us?{' '}
             <Link to={ROUTES.login} className="text-accent hover:underline">
               Sign in
             </Link>

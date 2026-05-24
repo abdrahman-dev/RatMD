@@ -8,10 +8,10 @@ export function HowItWorksSection() {
       <div className="text-center mb-12">
         <AnimatedElement direction="right">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
-            How it works
+            It's embarrassingly simple
           </h2>
           <p className="text-text-dim font-mono text-sm">
-            Five steps from PDF to optimized Markdown
+            Seriously, it takes about 10 seconds.
           </p>
         </AnimatedElement>
       </div>

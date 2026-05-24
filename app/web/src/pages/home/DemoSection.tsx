@@ -30,10 +30,10 @@ export function DemoSection() {
       <div className="text-center mb-12">
         <AnimatedElement direction="right">
           <h2 className="text-2xl sm:text-3xl font-bold text-text font-sans mb-3">
-            See it in action
+            Try it right now
           </h2>
           <p className="text-text-dim font-mono text-sm">
-            Upload a PDF and watch it transform into optimized Markdown
+            No signup. No limits. Just drop your PDF.
           </p>
         </AnimatedElement>
       </div>

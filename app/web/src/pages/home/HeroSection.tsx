@@ -1,54 +1,72 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
-import { LogoIcon } from '@/components/ui/logo'
 import { ROUTES } from '@/lib/constants'
 
-const floatingWords = [
-  'tokens', 'RAG', 'context', '.pdf', 'embed', 'chunk',
-  'llm', 'markdown', 'vector', 'parse', 'optimize', 'clean',
-]
-
-function FloatingText({ word, index }: { word: string; index: number }) {
-  const startX = (index * 8.3) % 100
-  const duration = 6 + (index % 5) * 0.8
-  const delay = index * 0.7
-
-  return (
-    <motion.span
-      className="absolute font-mono text-xs text-text-dimmer pointer-events-none select-none"
-      style={{
-        left: `${startX}%`,
-        bottom: '-20px',
-      }}
-      initial={{ y: 60, opacity: 0 }}
-      animate={{
-        y: -60,
-        opacity: [0, 0.15, 0],
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: 'linear',
-      }}
-    >
-      {word}
-    </motion.span>
-  )
-}
+const streaks = Array.from({ length: 12 }, (_, i) => ({
+  id: i,
+  left: `${(i * 8.5) % 100}%`,
+  top: `${(i * 13) % 100}%`,
+  width: `${18 + (i % 5) * 4}%`,
+  rotation: 20 + (i % 7) * 5,
+  duration: 22 + (i % 4) * 6,
+  delay: i * 1.2,
+}))
 
 export function HeroSection() {
+  const navigate = useNavigate()
   return (
     <section className="relative overflow-hidden pt-20 pb-16 sm:pt-28 sm:pb-20">
-      <div className="absolute inset-0 bg-gradient-to-b from-accent-subtle via-transparent to-transparent pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-surface rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Floating text fragments */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {floatingWords.map((word, i) => (
-          <FloatingText key={word} word={word} index={i} />
+      {/* Animated light streaks */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+        {streaks.map((s) => (
+          <motion.div
+            key={s.id}
+            className="absolute h-px"
+            style={{
+              left: s.left,
+              top: s.top,
+              width: s.width,
+              rotate: `${s.rotation}deg`,
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)',
+            }}
+            animate={{
+              x: [0, 40, 0, -40, 0],
+              y: [0, -20, 0, 20, 0],
+              opacity: [0, 0.5, 0.2, 0.6, 0],
+            }}
+            transition={{
+              duration: s.duration,
+              delay: s.delay,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+        {/* Secondary thicker streaks */}
+        {streaks.slice(0, 4).map((_, i) => (
+          <motion.div
+            key={`thick-${i}`}
+            className="absolute h-[2px]"
+            style={{
+              left: `${(i * 25 + 5) % 100}%`,
+              top: `${(i * 30 + 10) % 100}%`,
+              width: `${25 + i * 5}%`,
+              rotate: `${35 + i * 8}deg`,
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)',
+            }}
+            animate={{
+              x: [0, -30, 0, 30, 0],
+              opacity: [0, 0.3, 0.1, 0.4, 0],
+            }}
+            transition={{
+              duration: 30 + i * 5,
+              delay: i * 3,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
         ))}
       </div>
 
@@ -59,10 +77,10 @@ export function HeroSection() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-surface"
+            className="inline-flex items-center gap-2 px-4 py-1.5 border border-border bg-surface"
           >
             <motion.span
-              className="w-1.5 h-1.5 rounded-full block"
+              className="w-1.5 h-1.5 block"
               style={{ backgroundColor: 'var(--color-accent)', boxShadow: '0 0 6px var(--color-accent)' }}
               animate={{ opacity: [1, 0.4, 1] }}
               transition={{ duration: 2.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
@@ -80,27 +98,6 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex items-center gap-3 sm:gap-4 text-2xl sm:text-3xl font-mono text-text-dim"
           >
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-            >
-              PDF
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.35 }}
-            >
-              <LogoIcon size={32} />
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
-            >
-              .md
-            </motion.span>
           </motion.div>
 
           {/* Headline */}
@@ -110,14 +107,14 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text font-sans leading-tight"
           >
-            Turn bloated PDFs into{' '}
+            Stop feeding your AI<br />
             <span
               className="text-accent"
               style={{ textShadow: '0 0 40px var(--color-accent-glow)' }}
             >
               clean AI-ready
-            </span>{' '}
-            Markdown.
+            </span><br />
+            junk.
           </motion.h1>
 
           {/* Subheadline */}
@@ -127,7 +124,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="text-lg sm:text-xl text-text-dim max-w-xl font-mono"
           >
-            Save up to <span className="text-accent font-bold">20% tokens</span> instantly.
+            Drop a PDF. Get clean Markdown. Save tokens. Done.
           </motion.p>
 
           {/* CTAs */}
@@ -137,16 +134,12 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="flex flex-col sm:flex-row items-center gap-3 pt-4 w-full sm:w-auto"
           >
-            <Link to={ROUTES.converter}>
-              <Button variant="primary" size="lg">
-                Try RatMD
-              </Button>
-            </Link>
-            <Link to={ROUTES.docs}>
-              <Button variant="outline" size="lg">
-                CLI Docs
-              </Button>
-            </Link>
+            <Button variant="primary" size="lg" onClick={() => navigate(ROUTES.converter)}>
+              Try it free
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => navigate(ROUTES.docs)}>
+              See the docs
+            </Button>
           </motion.div>
 
           {/* Stats row */}
@@ -156,11 +149,11 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.7 }}
             className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-10 gap-y-1 pt-8 text-xs font-mono text-text-dimmer"
           >
-            <span>local-first</span>
-            <span className="w-1 h-1 rounded-full bg-border" />
-            <span>privacy focused</span>
-            <span className="w-1 h-1 rounded-full bg-border" />
-            <span>RAG-ready</span>
+            <span>runs in your browser</span>
+            <span className="w-1 h-1 bg-border" />
+            <span>zero data collected</span>
+            <span className="w-1 h-1 bg-border" />
+            <span>LLM-ready output</span>
           </motion.div>
         </div>
       </Container>

@@ -27,41 +27,41 @@ export const NAV_LINKS = [
 
 export const FEATURES = [
   {
-    title: 'AI-Optimized Output',
-    description: 'Markdown structured for LLM context windows. Clean, semantic, token-efficient.',
+    title: 'LLM-ready Markdown',
+    description: 'Clean structure your model actually understands. Not a wall of text.',
     icon: 'brain',
   },
   {
-    title: 'Local-First',
-    description: 'All processing happens in your browser. No uploads to external servers.',
+    title: 'Stays on your machine',
+    description: 'Everything runs in your browser. We literally can\'t see your files.',
     icon: 'lock',
   },
   {
-    title: 'Privacy Focused',
-    description: 'Your documents never leave your machine. 100% client-side processing.',
+    title: 'Private by design',
+    description: 'No accounts needed to convert. No tracking. No nonsense.',
     icon: 'shield',
   },
   {
-    title: 'CLI + Web',
-    description: 'Use via browser or terminal. ratmd convert file.pdf — that\'s it.',
+    title: 'Web now. CLI soon.',
+    description: 'Use the web app today. CLI dropping soon for terminal lovers.',
     icon: 'terminal',
   },
   {
-    title: 'Fast Parsing',
-    description: 'Built for speed. Parse and convert even large PDFs in seconds.',
+    title: 'Surprisingly fast',
+    description: 'Client-side parsing that doesn\'t make you wait around.',
     icon: 'zap',
   },
   {
-    title: 'RAG-Ready',
-    description: 'Output structured for vector databases and retrieval-augmented generation pipelines.',
+    title: 'RAG pipeline ready',
+    description: 'Chunk it, embed it, retrieve it. The output is already structured for that.',
     icon: 'database',
   },
 ] as const
 
 export const HOW_IT_WORKS = [
-  { number: 1, title: 'Upload PDF', description: 'Drag & drop or select a PDF file. Max 10MB.' },
-  { number: 2, title: 'Extract & Clean', description: 'We extract text, strip headers/footers, remove noise.' },
-  { number: 3, title: 'Generate Markdown', description: 'Semantic structure is preserved in clean Markdown.' },
-  { number: 4, title: 'Optimize Tokens', description: 'See your token savings — up to 75% reduction.' },
-  { number: 5, title: 'Export or Copy', description: 'Download .md file or copy to clipboard. Ready for AI.' },
+  { number: 1, title: 'Upload PDF', description: 'Drag it in or click to browse. Max 10MB for now.' },
+  { number: 2, title: 'Extract & Clean', description: 'We rip out the good stuff and trash the rest.' },
+  { number: 3, title: 'Generate Markdown', description: 'Headings stay headings. Content stays readable.' },
+  { number: 4, title: 'Optimize Tokens', description: 'Watch the token count drop in real time.' },
+  { number: 5, title: 'Export or Copy', description: 'Copy it, download it, paste it straight into your LLM.' },
 ] as const
