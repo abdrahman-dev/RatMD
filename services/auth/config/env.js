@@ -25,6 +25,14 @@ export const envSchema = z.object({
     .string()
     .min(32, "ENCRYPTION_SECRET must be at least 32 characters"),
 
+  LLM_BASE_URL: z
+    .string()
+    .optional(),
+
+  LLM_MODEL: z
+    .string()
+    .optional(),
+
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),

@@ -2,6 +2,8 @@ import conversionModel from '../../model/conversionModel.js';
 import userModel from '../../model/userModel.js';
 import { AppError } from '../../middleware/errorHandler.js';
 import { logger } from '../../utils/logger.js';
+import { decrypt } from '../../utils/encryption.js';
+import { createLLMClient, getLLMConfig } from '../../utils/llmClient.js';
 
 const RANK_THRESHOLDS = [
     { threshold: 1000000, rank: 'Rat King' },
@@ -124,6 +126,97 @@ export const getConversionStats = async (req, res, next) => {
                 avatar: user.avatar
             }
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const ENHANCE_SYSTEM_PROMPT = `You clean up Markdown text that was automatically extracted from a PDF document.
+
+Your tasks:
+- Fix broken heading hierarchy and heading formatting
+- Remove page numbers, repeated headers, footers, and other extraction artifacts
+- Fix broken tables so they render as valid Markdown tables
+- Join lines that were split mid-sentence by the extraction process
+
+Rules:
+- Preserve ALL content. Do not summarize, shorten, or omit any information.
+- Return ONLY the cleaned Markdown, with no commentary, explanation, or code fences.`;
+
+export const enhanceConversion = async (req, res, next) => {
+    try {
+        const { markdown, filename } = req.body;
+        const userId = req.user.userId;
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return next(new AppError('User not found', 404));
+        }
+
+        if (!user.openRouterApiKey) {
+            return res.status(400).json({
+                success: false,
+                message: "No OpenRouter key on file. Add one in your profile first."
+            });
+        }
+
+        let apiKey;
+        try {
+            apiKey = decrypt(user.openRouterApiKey);
+        } catch (error) {
+            logger.warn('LLM key decrypt failed', { userId });
+            return res.status(200).json({
+                success: true,
+                enhanced: false,
+                markdown,
+                reason: "Could not read the saved API key. Please re-add it in your profile."
+            });
+        }
+
+        try {
+            const client = createLLMClient(apiKey);
+            const { model } = getLLMConfig();
+
+            const completion = await client.chat.completions.create({
+                model,
+                messages: [
+                    { role: 'system', content: ENHANCE_SYSTEM_PROMPT },
+                    { role: 'user', content: markdown }
+                ]
+            });
+
+            const cleanedMarkdown = completion.choices?.[0]?.message?.content?.trim();
+
+            if (!cleanedMarkdown) {
+                return res.status(200).json({
+                    success: true,
+                    enhanced: false,
+                    markdown,
+                    reason: "The AI returned an empty response. Original markdown kept."
+                });
+            }
+
+            logger.info('Conversion enhanced', { userId, filename });
+
+            return res.status(200).json({
+                success: true,
+                enhanced: true,
+                markdown: cleanedMarkdown,
+                usage: {
+                    model,
+                    inputTokens: completion.usage?.prompt_tokens ?? 0,
+                    outputTokens: completion.usage?.completion_tokens ?? 0
+                }
+            });
+        } catch (error) {
+            logger.warn('LLM enhancement failed', { userId, filename });
+            return res.status(200).json({
+                success: true,
+                enhanced: false,
+                markdown,
+                reason: "AI enhancement failed (bad key, rate limit, or timeout). Original markdown kept."
+            });
+        }
     } catch (error) {
         next(error);
     }

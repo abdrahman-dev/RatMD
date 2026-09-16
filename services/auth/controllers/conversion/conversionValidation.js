@@ -30,3 +30,14 @@ export const avatarSchema = z.object({
             { message: "Avatar must be one of: rat_default, rat_ninja, rat_hacker, rat_king, rat_ghost" }
         )
 });
+
+export const enhanceConversionSchema = z.object({
+    markdown: z
+        .string()
+        .min(1, "Markdown is required")
+        .max(50000, "Markdown is too large for enhancement (max 50000 characters)"),
+    filename: z
+        .string()
+        .min(1, "Filename is required")
+        .max(255, "Filename must be at most 255 characters")
+});
