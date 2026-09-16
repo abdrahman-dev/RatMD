@@ -83,6 +83,16 @@ The backend provides user accounts, conversion history tracking, community leade
 | MongoDB       | 9       | Database + Mongoose ODM                    |
 | Zod           | 4       | Input validation                           |
 
+## 🧩 Capstone Concepts
+
+| Concept | Where it lives |
+|---|---|
+| API endpoints | `services/auth/app.js:31-34` (mounts `/api/auth`, `/api/conversions`, `/api/community`, `/api/profile`) · `services/auth/routes/authRoutes.js`, `services/auth/routes/conversionRoutes.js:14-17` (`POST /save`, `POST /enhance`, `GET /history`, `GET /stats`), `services/auth/routes/profileRoutes.js`, `services/auth/routes/communityRoutes.js` · controllers in `services/auth/controllers/auth/`, `conversion/`, `profile/`, `community/` |
+| Database | `services/auth/model/mongodb.js` (Mongoose `connectDB`) · `services/auth/model/userModel.js`, `services/auth/model/conversionModel.js:3-44` (`originalTokens`, `optimizedTokens`, `savingsPercent`, `contentHash`, `enhancedMarkdown`, etc.), `services/auth/model/refreshToken.js` |
+| Authentication | `services/auth/middleware/authMiddleware.js:4-16` (verifies JWT, sets `req.user = { userId }`) · `services/auth/utils/authTokens.js` (`generateAccessToken`/`generateRefreshToken`) · `services/auth/config/env.js:16-22` (`ACCESS_TOKEN_SECRET`, `REFRESH_TOKEN_SECRET`) · `services/auth/controllers/auth/authController.js` + `profile/profileController.js` |
+| LLM integration | `services/auth/utils/llmClient.js:3-10` (`createLLMClient(apiKey)` via `openai` + `LLM_BASE_URL`/`LLM_MODEL`) · `services/auth/utils/encryption.js` (AES-256-GCM encrypt/decrypt of `openRouterApiKey`) · `services/auth/controllers/conversion/conversionController.js:136-283` (`enhanceConversion` + system prompt) · `services/auth/config/env.js:24-34` (`ENCRYPTION_SECRET`, `LLM_BASE_URL`, `LLM_MODEL`) · frontend `app/web/src/pages/profile/ProfilePage.tsx:217-252` (BYO key form) + `app/web/src/pages/converter/ConverterPage.tsx:197-232` (Enhance with AI) |
+| Caching | `services/auth/model/conversionModel.js:25-40` (`contentHash: { index: true }`, `enhancedMarkdown`, `llmModel`, `llmInputTokens`, `llmOutputTokens`) · `services/auth/controllers/conversion/conversionController.js:165-186` (sha256 `createHash('sha256')`, `findOne({ userId, contentHash, enhancedMarkdown })`, `cached:true`) + `227-254` (store result) · `app/web/src/lib/utils/index.ts:sha256Hex` + `app/web/src/pages/converter/ConverterPage.tsx:98-114` (hash on save) |
+
 ## 📁 Project Structure
 
 ```
