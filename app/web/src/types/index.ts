@@ -53,6 +53,7 @@ export interface AuthUser {
   bio: string
   github: string
   linkedin: string
+  hasLlmKey?: boolean
 }
 
 export interface ApiResponse<T> {

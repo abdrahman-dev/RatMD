@@ -1,6 +1,8 @@
-import { useState, type FormEvent, type ChangeEvent } from 'react'
+import { useEffect, useState, type FormEvent, type ChangeEvent } from 'react'
 import { motion } from 'framer-motion'
 import { useAuthStore } from '@/app/store/auth-store'
+import { client } from '@/lib/api/client'
+import { PROFILE } from '@/lib/api/endpoints'
 
 const AVATAR_OPTIONS = [
   { id: 'rat_default', label: 'R' },
@@ -21,6 +23,31 @@ export function ProfilePage() {
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState<'success' | 'error'>('success')
 
+  const [llmKey, setLlmKey] = useState('')
+  const [hasLlmKey, setHasLlmKey] = useState<boolean>(Boolean(user?.hasLlmKey))
+  const [llmKeySaving, setLlmKeySaving] = useState(false)
+  const [llmKeyMessage, setLlmKeyMessage] = useState('')
+  const [llmKeyMessageType, setLlmKeyMessageType] = useState<'success' | 'error'>('success')
+
+  useEffect(() => {
+    let cancelled = false
+    async function loadHasLlmKey() {
+      try {
+        const res = await client.get<{ success: boolean; profile: { hasLlmKey: boolean } }>(PROFILE.me)
+        if (!cancelled && typeof res.profile?.hasLlmKey === 'boolean') {
+          setHasLlmKey(res.profile.hasLlmKey)
+          if (res.profile.hasLlmKey) {
+            useAuthStore.getState().updateUserData({ hasLlmKey: true })
+          }
+        }
+      } catch {
+        // ignore — profile may not be available
+      }
+    }
+    void loadHasLlmKey()
+    return () => { cancelled = true }
+  }, [])
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setMessage('')
@@ -34,6 +61,30 @@ export function ProfilePage() {
       setMessage(err instanceof Error ? err.message : 'Failed to update profile')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleLlmKeySubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    setLlmKeyMessage('')
+    if (!llmKey.trim()) {
+      setLlmKeyMessageType('error')
+      setLlmKeyMessage('Please enter a key.')
+      return
+    }
+    setLlmKeySaving(true)
+    try {
+      await client.put<{ success: boolean; hasLlmKey: boolean }>(PROFILE.llmKey, { apiKey: llmKey.trim() })
+      setHasLlmKey(true)
+      useAuthStore.getState().updateUserData({ hasLlmKey: true })
+      setLlmKey('')
+      setLlmKeyMessageType('success')
+      setLlmKeyMessage('Key saved')
+    } catch (err: unknown) {
+      setLlmKeyMessageType('error')
+      setLlmKeyMessage(err instanceof Error ? err.message : 'Failed to save key')
+    } finally {
+      setLlmKeySaving(false)
     }
   }
 
@@ -161,6 +212,43 @@ export function ProfilePage() {
               </p>
             )}
           </div>
+        </form>
+
+        {/* Bring-your-own OpenRouter key */}
+        <form onSubmit={handleLlmKeySubmit} className="bg-surface border border-border p-6 space-y-4" noValidate>
+          <div>
+            <h2 className="text-sm font-mono font-bold text-text">AI enhancement — OpenRouter key</h2>
+            <p className="text-xs font-mono text-text-dim mt-1">
+              Bring your own OpenRouter key to enable LLM-powered markdown cleanup. Stored encrypted, never shown again.
+              {hasLlmKey && <span className="text-success ml-2">Key saved</span>}
+            </p>
+          </div>
+          <div>
+            <label htmlFor="profile-llm-key" className="block text-xs font-mono text-text-dim mb-1.5">
+              OpenRouter API key
+            </label>
+            <input
+              id="profile-llm-key"
+              type="password"
+              value={llmKey}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setLlmKey(e.target.value)}
+              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
+              placeholder={hasLlmKey ? '•••••••••••••••• (saved)' : 'sk-or-v1-...'}
+              autoComplete="off"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={llmKeySaving}
+            className="w-full bg-surface-elevated border border-border text-text font-mono text-sm px-5 py-2 hover:border-accent hover:text-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          >
+            {llmKeySaving ? 'Saving...' : hasLlmKey ? 'Update key' : 'Save key'}
+          </button>
+          {llmKeyMessage && (
+            <p className={`text-xs font-mono text-center ${llmKeyMessageType === 'success' ? 'text-success' : 'text-danger'}`}>
+              {llmKeyMessage}
+            </p>
+          )}
         </form>
       </motion.div>
     </div>
