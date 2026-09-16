@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import conversionModel from '../../model/conversionModel.js';
 import userModel from '../../model/userModel.js';
 import { AppError } from '../../middleware/errorHandler.js';
@@ -24,7 +25,7 @@ function computeRatRank(totalTokensSaved) {
 
 export const saveConversion = async (req, res, next) => {
     try {
-        const { filename, originalTokens, optimizedTokens, savingsPercent } = req.body;
+        const { filename, originalTokens, optimizedTokens, savingsPercent, contentHash } = req.body;
         const userId = req.user.userId;
 
         const conversion = await conversionModel.create({
@@ -32,7 +33,8 @@ export const saveConversion = async (req, res, next) => {
             filename,
             originalTokens,
             optimizedTokens,
-            savingsPercent
+            savingsPercent,
+            ...(contentHash ? { contentHash } : {})
         });
 
         const tokensSaved = originalTokens - optimizedTokens;
@@ -160,6 +162,29 @@ export const enhanceConversion = async (req, res, next) => {
             });
         }
 
+        const contentHash = crypto.createHash('sha256').update(markdown).digest('hex');
+
+        const cached = await conversionModel.findOne({
+            userId,
+            contentHash,
+            enhancedMarkdown: { $exists: true, $ne: null }
+        });
+
+        if (cached) {
+            logger.info('Enhancement cache hit', { userId, filename, contentHash });
+            return res.status(200).json({
+                success: true,
+                enhanced: true,
+                markdown: cached.enhancedMarkdown,
+                cached: true,
+                usage: {
+                    model: cached.llmModel,
+                    inputTokens: cached.llmInputTokens ?? 0,
+                    outputTokens: cached.llmOutputTokens ?? 0
+                }
+            });
+        }
+
         let apiKey;
         try {
             apiKey = decrypt(user.openRouterApiKey);
@@ -196,6 +221,41 @@ export const enhanceConversion = async (req, res, next) => {
                 });
             }
 
+            const inputTokens = completion.usage?.prompt_tokens ?? 0;
+            const outputTokens = completion.usage?.completion_tokens ?? 0;
+
+            try {
+                const existing = await conversionModel.findOne({ userId, contentHash });
+                if (existing) {
+                    existing.enhancedMarkdown = cleanedMarkdown;
+                    existing.llmModel = model;
+                    existing.llmInputTokens = inputTokens;
+                    existing.llmOutputTokens = outputTokens;
+                    await existing.save();
+                } else {
+                    await conversionModel.findOneAndUpdate(
+                        { userId, contentHash },
+                        {
+                            $setOnInsert: {
+                                filename,
+                                originalTokens: 1,
+                                optimizedTokens: 1,
+                                savingsPercent: 0
+                            },
+                            $set: {
+                                enhancedMarkdown: cleanedMarkdown,
+                                llmModel: model,
+                                llmInputTokens: inputTokens,
+                                llmOutputTokens: outputTokens
+                            }
+                        },
+                        { upsert: true }
+                    );
+                }
+            } catch (cacheError) {
+                logger.warn('Failed to cache enhancement', { userId, contentHash });
+            }
+
             logger.info('Conversion enhanced', { userId, filename });
 
             return res.status(200).json({
@@ -204,8 +264,8 @@ export const enhanceConversion = async (req, res, next) => {
                 markdown: cleanedMarkdown,
                 usage: {
                     model,
-                    inputTokens: completion.usage?.prompt_tokens ?? 0,
-                    outputTokens: completion.usage?.completion_tokens ?? 0
+                    inputTokens,
+                    outputTokens
                 }
             });
         } catch (error) {

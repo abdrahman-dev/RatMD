@@ -16,7 +16,12 @@ export const saveConversionSchema = z.object({
     savingsPercent: z
         .number()
         .min(0, "Savings percent must be at least 0")
-        .max(100, "Savings percent must be at most 100")
+        .max(100, "Savings percent must be at most 100"),
+    contentHash: z
+        .string()
+        .length(64, "contentHash must be a 64-character hex sha256")
+        .regex(/^[a-f0-9]{64}$/, "contentHash must be hex sha256")
+        .optional()
 }).refine((data) => data.optimizedTokens <= data.originalTokens, {
     message: "Optimized tokens cannot exceed original tokens",
     path: ["optimizedTokens"]

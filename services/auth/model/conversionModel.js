@@ -22,6 +22,22 @@ const conversionSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    contentHash: {
+        type: String,
+        index: true
+    },
+    enhancedMarkdown: {
+        type: String
+    },
+    llmModel: {
+        type: String
+    },
+    llmInputTokens: {
+        type: Number
+    },
+    llmOutputTokens: {
+        type: Number
+    },
     createdAt: {
         type: Date,
         default: Date.now
