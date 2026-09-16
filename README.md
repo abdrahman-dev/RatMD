@@ -25,7 +25,7 @@ RatMD converts PDF documents into clean, token-efficient Markdown designed for L
 
 Token savings are real but vary by document. Heavily formatted PDFs with repeated headers, footers, and whitespace typically see 30–60% fewer tokens. Plain academic papers with minimal formatting see smaller gains. The estimator uses OpenAI's `cl100k_base` encoding (via js-tiktoken) for accurate counts — not a heuristic.
 
-The backend provides user accounts, conversion history tracking, community leaderboards, and profile management — all secured with httpOnly cookie-based JWT auth.
+The backend provides user accounts, conversion history tracking, community leaderboards, and profile management — all secured with httpOnly cookie-based JWT auth. Optional LLM-powered markdown cleanup is available via a bring-your-own OpenRouter key stored encrypted on your profile.
 
 ## 🚀 Features
 
@@ -34,6 +34,7 @@ The backend provides user accounts, conversion history tracking, community leade
 - **Auth system** — JWT-based auth with httpOnly cookies, email verification via OTP, password reset
 - **Dashboard** — user stats, conversion history with pagination
 - **Profile** — avatar picker, bio, GitHub, LinkedIn, social links
+- **AI enhancement (optional, BYO key)** — LLM-powered markdown cleanup via OpenRouter; bring your own key, stored encrypted (see below)
 - **Community leaderboard** — top 20 users ranked by tokens saved
 - **Rat ranks** — automatic rank progression from Rookie Rat to Rat King
 - **Animated background** — canvas-based particle system with theme-aware palette
@@ -131,9 +132,18 @@ RatMD/
     ├── middleware/           # authMiddleware, errorHandler, rateLimiter, validate
     ├── model/               # userModel, refreshToken, conversionModel, mongodb
     ├── routes/              # authRoutes, conversionRoutes, communityRoutes, profileRoutes
-    ├── utils/               # authTokens, logger
-    └── .env                 # PORT, MONGODB_URL, JWT secrets
+    ├── utils/               # authTokens, logger, encryption, llmClient
+    └── .env.example         # PORT, MONGODB_URL, JWT secrets, ENCRYPTION_SECRET, LLM_*
 ```
+
+## 🤖 AI Enhancement (Bring Your Own Key)
+
+RatMD can optionally clean up converted Markdown with an LLM (fix broken headings, strip page-number/header-footer artifacts, repair tables) — without ever uploading your PDF.
+
+- It is **optional** — conversion works fully without it.
+- It is **bring-your-own-key**: add your OpenRouter API key on the **Profile** page (Profile → AI enhancement — OpenRouter key). The key is encrypted at rest with AES-256-GCM (ENCRYPTION_SECRET) and never returned from the API or logged.
+- In the Converter, after converting a PDF, an **Enhance with AI** button appears when you are signed in and have a key saved. It sends only the already-converted Markdown text (never the PDF) to OpenRouter. On failure the original Markdown is kept. Repeated enhancements of the same content are served from cache (content-hash deduplication) to avoid redundant calls.
+- Server env placeholders: see `services/auth/.env.example` for `ENCRYPTION_SECRET`, `LLM_BASE_URL` (default `https://openrouter.ai/api/v1`), and `LLM_MODEL` (default `openai/gpt-4o-mini`).
 
 ## 🛠 Getting Started
 
