@@ -196,38 +196,40 @@ export function ConverterPage() {
                 />
                 {isAuthenticated && hasLlmKey ? (
                   <div className="space-y-2">
-                    <Button
-                      variant="secondary"
-                      size="md"
-                      className="w-full"
-                      onClick={handleEnhance}
-                      isLoading={isEnhancing}
-                      disabled={isEnhancing}
-                    >
-                      {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
-                    </Button>
-                    {enhanceCached && (
-                      <p className="text-[10px] font-mono text-text-dimmer text-center">from cache</p>
-                    )}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={handleEnhance}
+                        disabled={isEnhancing}
+                      >
+                        {isEnhancing ? 'Enhancing…' : 'Enhance with AI'}
+                      </Button>
+                      {enhanceCached && (
+                        <motion.span
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-[10px] font-mono text-text-dimmer shrink-0"
+                        >
+                          from cache
+                        </motion.span>
+                      )}
+                    </div>
                     {enhanceNotice && (
-                      <p className="text-xs font-mono text-text-dim bg-surface border border-border px-3 py-2 text-center">
+                      <p className="text-xs font-mono text-text-dimmer text-center">
                         {enhanceNotice}
                       </p>
                     )}
                   </div>
                 ) : isAuthenticated && !hasLlmKey ? (
-                  <div className="bg-surface border border-border px-3 py-2 text-center">
-                    <p className="text-xs font-mono text-text-dim">
-                      Add your{' '}
-                      <Link to={ROUTES.profile} className="text-accent hover:underline">
-                        OpenRouter key in Profile
-                      </Link>{' '}
-                      to enable AI enhancement.
-                    </p>
-                    {enhanceNotice && (
-                      <p className="text-xs font-mono text-text-dim mt-2">{enhanceNotice}</p>
-                    )}
-                  </div>
+                  <p className="text-xs font-mono text-text-dimmer text-center leading-relaxed">
+                    Add your{' '}
+                    <Link to={ROUTES.profile} className="text-text-dim hover:text-accent underline underline-offset-4 decoration-border transition-colors">
+                      OpenRouter key in Profile
+                    </Link>{' '}
+                    to enable AI enhancement.
+                  </p>
                 ) : null}
                 <ExportActions
                   content={conversion.markdown}

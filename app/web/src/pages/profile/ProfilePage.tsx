@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useAuthStore } from '@/app/store/auth-store'
 import { client } from '@/lib/api/client'
 import { PROFILE } from '@/lib/api/endpoints'
+import { Button } from '@/components/ui/Button'
 
 const AVATAR_OPTIONS = [
   { id: 'rat_default', label: 'R' },
@@ -214,18 +215,24 @@ export function ProfilePage() {
           </div>
         </form>
 
-        {/* Bring-your-own OpenRouter key */}
+        {/* Bring-your-own OpenRouter key — muted, secondary card like avatar section */}
         <form onSubmit={handleLlmKeySubmit} className="bg-surface border border-border p-6 space-y-4" noValidate>
-          <div>
-            <h2 className="text-sm font-mono font-bold text-text">AI enhancement — OpenRouter key</h2>
-            <p className="text-xs font-mono text-text-dim mt-1">
-              Bring your own OpenRouter key to enable LLM-powered markdown cleanup. Stored encrypted, never shown again.
-              {hasLlmKey && <span className="text-success ml-2">Key saved</span>}
-            </p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-mono text-text">OpenRouter key</h2>
+              <p className="text-xs font-mono text-text-dimmer mt-1 leading-relaxed">
+                Bring your own key to enable AI cleanup in the converter. Encrypted at rest, never shown again.
+              </p>
+            </div>
+            {hasLlmKey && (
+              <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-mono font-medium bg-success/10 text-success border border-success/20">
+                Key saved
+              </span>
+            )}
           </div>
           <div>
             <label htmlFor="profile-llm-key" className="block text-xs font-mono text-text-dim mb-1.5">
-              OpenRouter API key
+              API key
             </label>
             <input
               id="profile-llm-key"
@@ -233,17 +240,22 @@ export function ProfilePage() {
               value={llmKey}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setLlmKey(e.target.value)}
               className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
-              placeholder={hasLlmKey ? '•••••••••••••••• (saved)' : 'sk-or-v1-...'}
+              placeholder={hasLlmKey ? '••••••••••••••••' : 'sk-or-v1-...'}
               autoComplete="off"
             />
+            <p className="text-[11px] font-mono text-text-dimmer mt-1.5">
+              Used only to call OpenRouter on your behalf when you click Enhance.
+            </p>
           </div>
-          <button
+          <Button
             type="submit"
+            variant="outline"
+            size="sm"
             disabled={llmKeySaving}
-            className="w-full bg-surface-elevated border border-border text-text font-mono text-sm px-5 py-2 hover:border-accent hover:text-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full"
           >
-            {llmKeySaving ? 'Saving...' : hasLlmKey ? 'Update key' : 'Save key'}
-          </button>
+            {llmKeySaving ? 'Saving…' : hasLlmKey ? 'Update key' : 'Save key'}
+          </Button>
           {llmKeyMessage && (
             <p className={`text-xs font-mono text-center ${llmKeyMessageType === 'success' ? 'text-success' : 'text-danger'}`}>
               {llmKeyMessage}
