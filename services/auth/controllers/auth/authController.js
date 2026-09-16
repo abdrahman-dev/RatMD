@@ -22,7 +22,7 @@ export const getApiStatus = (req, res) => {
 
 export const getMe = async (req, res) => {
     try {
-        const user = await userModel.findById(req.user.userId).select('-password');
+        const user = await userModel.findById(req.user.userId).select('-password -openRouterApiKey');
         if (!user) return res.status(404).json({ success: false, message: "User not found" });
         return res.status(200).json({ success: true, data: user });
     } catch {

@@ -21,6 +21,10 @@ export const envSchema = z.object({
     .string()
     .min(32, "REFRESH_TOKEN_SECRET must be at least 32 characters"),
 
+  ENCRYPTION_SECRET: z
+    .string()
+    .min(32, "ENCRYPTION_SECRET must be at least 32 characters"),
+
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),

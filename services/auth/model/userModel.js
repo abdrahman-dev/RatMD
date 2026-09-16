@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
     ratRank: {type: String, default: 'Rookie Rat'},
     bio: {type: String, default: ''},
     github: {type: String, default: ''},
-    linkedin: {type: String, default: ''}
+    linkedin: {type: String, default: ''},
+    openRouterApiKey: {type: String, default: null}
 })
 
 const userModel = mongoose.model("user", userSchema);

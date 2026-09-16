@@ -1,6 +1,7 @@
 import userModel from '../../model/userModel.js';
 import { AppError } from '../../middleware/errorHandler.js';
 import { logger } from '../../utils/logger.js';
+import { encrypt } from '../../utils/encryption.js';
 
 const ALLOWED_AVATARS = ['rat_default', 'rat_ninja', 'rat_hacker', 'rat_king', 'rat_ghost'];
 
@@ -22,7 +23,8 @@ export const getProfile = async (req, res, next) => {
                 totalConversions: user.totalConversions,
                 bio: user.bio,
                 github: user.github,
-                linkedin: user.linkedin
+                linkedin: user.linkedin,
+                hasLlmKey: Boolean(user.openRouterApiKey)
             }
         });
     } catch (error) {
@@ -69,8 +71,33 @@ export const updateProfile = async (req, res, next) => {
                 totalConversions: user.totalConversions,
                 bio: user.bio,
                 github: user.github,
-                linkedin: user.linkedin
+                linkedin: user.linkedin,
+                hasLlmKey: Boolean(user.openRouterApiKey)
             }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateLlmKey = async (req, res, next) => {
+    try {
+        const { apiKey } = req.body;
+        const userId = req.user.userId;
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return next(new AppError('User not found', 404));
+        }
+
+        user.openRouterApiKey = encrypt(apiKey);
+        await user.save();
+
+        logger.info('LLM key updated', { userId });
+
+        return res.status(200).json({
+            success: true,
+            hasLlmKey: true
         });
     } catch (error) {
         next(error);
