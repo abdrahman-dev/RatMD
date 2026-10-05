@@ -28,7 +28,7 @@ Authentication, conversion history, and key storage are handled by the `services
 
 0 swaps used — all 5 concepts are from the primary list.
 
-- **API endpoints** — `services/auth/app.js:31-34` mounts `/api/auth`, `/api/conversions`, `/api/community`, `/api/profile`; routes in `services/auth/routes/*.js` including `conversionRoutes.js:14-17` (`POST /save`, `POST /enhance`, `GET /history`, `GET /stats`).
+- **API endpoints** — `services/auth/app.js:32-35` mounts `/api/auth`, `/api/conversions`, `/api/community`, `/api/profile`; routes in `services/auth/routes/*.js` including `conversionRoutes.js:14-17` (`POST /save`, `POST /enhance`, `GET /history`, `GET /stats`).
 - **Database** — `services/auth/model/mongodb.js` (connection) and Mongoose schemas `services/auth/model/userModel.js`, `services/auth/model/conversionModel.js`, `services/auth/model/refreshToken.js`.
 - **Authentication** — `services/auth/middleware/authMiddleware.js:4-16` (JWT verify, `req.user = { userId }`), `services/auth/utils/authTokens.js`, `services/auth/config/env.js:16-22` (`ACCESS_TOKEN_SECRET`/`REFRESH_TOKEN_SECRET`), and `services/auth/controllers/auth/*`.
 - **LLM integration** — `services/auth/utils/llmClient.js:3-10` (`createLLMClient(apiKey)` with OpenRouter), `services/auth/utils/encryption.js` (AES-256-GCM for `openRouterApiKey`), `services/auth/controllers/conversion/conversionController.js:136-283`, and frontend BYO-key UI in `app/web/src/pages/profile/ProfilePage.tsx` + `app/web/src/pages/converter/ConverterPage.tsx`.
