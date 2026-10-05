@@ -1,19 +1,20 @@
 {
-  "name": "client",
+  "name": "ratmd-web",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "RatMD frontend — React SPA that converts PDFs into clean, token-efficient Markdown for LLM workflows.",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "typecheck": "tsc -b --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.15",
-    "@radix-ui/react-progress": "^1.1.8",
-    "@radix-ui/react-tooltip": "^1.2.8",
-    "@tailwindcss/vite": "^4.3.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "js-tiktoken": "^1.0.21",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.0",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

@@ -1,32 +1,44 @@
 {
-  "name": "test2",
-  "version": "1.0.0",
-  "description": "",
+  "name": "ratmd-api",
+  "version": "0.1.0",
+  "description": "RatMD API — Express + MongoDB service for auth, conversion tracking, community leaderboards, and BYO-key LLM enhancement.",
   "main": "app.js",
-  "types": "module",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
+  "keywords": [
+    "pdf",
+    "markdown",
+    "llm",
+    "tokenizer",
+    "express",
+    "mongodb"
+  ],
+  "author": "Abdrahman Walied",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdrahman-dev/RatMD.git",
+    "directory": "services/auth"
+  },
   "dependencies": {
-    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.1",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.1",
-    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.4.1",
-    "nodemailer": "^8.0.7",
-    "nodemon": "^3.1.14",
     "openai": "^7.15.0",
     "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
