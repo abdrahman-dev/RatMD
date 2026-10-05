@@ -27,7 +27,7 @@ const faqData: FaqCategory[] = [
       },
       {
         q: 'Do I need an account?',
-        a: 'No account needed to convert PDFs — RatMD works fully in your browser. Sign in to track your conversion history, view your total token savings, and appear on the community leaderboard.',
+        a: 'No account needed to convert PDFs — RatMD works fully in your browser. Sign in to track your conversion history and view your total token savings.',
       },
       {
         q: 'Is RatMD free?',
@@ -44,7 +44,7 @@ const faqData: FaqCategory[] = [
       },
       {
         q: 'What savings can I expect?',
-        a: 'Typical savings range from 40% to 75%, depending on the PDF. Dense academic papers with heavy formatting see the highest savings. Plain text documents see less. The savings come from removing headers, footers, page numbers, redundant whitespace, and layout artifacts that carry no semantic value.',
+        a: 'Typical savings range from 30% to 60%, depending on the PDF. Dense academic papers with heavy formatting see the highest savings. Plain text documents see less. The savings come from removing headers, footers, page numbers, redundant whitespace, and layout artifacts that carry no semantic value.',
       },
       {
         q: 'Why do savings vary between PDFs?',

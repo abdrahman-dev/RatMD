@@ -91,15 +91,6 @@ export function HeroSection() {
             </span>
           </motion.div>
 
-          {/* Visual metaphor */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex items-center gap-3 sm:gap-4 text-2xl sm:text-3xl font-mono text-text-dim"
-          >
-          </motion.div>
-
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
