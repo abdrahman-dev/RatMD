@@ -14,12 +14,6 @@ export const CONVERSIONS = {
   enhance: '/conversions/enhance',
 } as const
 
-export const COMMUNITY = {
-  leaderboard: '/community/leaderboard',
-  avatar: '/community/avatar',
-  profile: (userId: string) => `/community/profile/${userId}`,
-} as const
-
 export const PROFILE = {
   me: '/profile',
   update: '/profile',

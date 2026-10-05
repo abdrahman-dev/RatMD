@@ -1,9 +1,6 @@
 export const APP_NAME = 'RatMD'
-export const APP_TAGLINE = 'PDF to Markdown, optimized for AI'
-export const APP_DESCRIPTION = 'Reduce LLM token usage by up to 20% by converting PDFs into clean Markdown.'
 
 export const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-export const ACCEPTED_FILE_TYPES = ['.pdf']
 export const ACCEPTED_MIME_TYPES = ['application/pdf']
 
 export const ROUTES = {

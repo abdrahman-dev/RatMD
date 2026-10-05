@@ -3,13 +3,8 @@ import type { ConversionResult, FileWithPreview } from '@/types'
 import { convertPDF } from '@/services/parser'
 import { estimateSavings } from '@/lib/tokenizer/estimate'
 import { generateId } from '@/lib/utils'
-import { APP_NAME } from '@/lib/constants'
 
 interface AppState {
-  // File
-  file: FileWithPreview | null
-  setFile: (file: FileWithPreview | null) => void
-
   // Conversion
   conversion: ConversionResult | null
   isConverting: boolean
@@ -25,23 +20,15 @@ interface AppState {
   setEnhanceCached: (v: boolean) => void
   setEnhanceNotice: (msg: string | null) => void
   updateMarkdown: (markdown: string) => void
-
-  // UI
-  sidebarOpen: boolean
-  setSidebarOpen: (open: boolean) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  file: null,
   conversion: null,
   isConverting: false,
   error: null,
-  sidebarOpen: false,
   isEnhancing: false,
   enhanceCached: false,
   enhanceNotice: null,
-
-  setFile: (file) => set({ file, conversion: null, error: null, isEnhancing: false, enhanceCached: false, enhanceNotice: null }),
 
   convert: async (fileWithPreview) => {
     set({ isConverting: true, error: null, enhanceCached: false, enhanceNotice: null })
@@ -67,16 +54,10 @@ export const useAppStore = create<AppState>((set) => ({
     }
   },
 
-  reset: () => set({ file: null, conversion: null, error: null, isConverting: false, isEnhancing: false, enhanceCached: false, enhanceNotice: null }),
+  reset: () => set({ conversion: null, error: null, isConverting: false, isEnhancing: false, enhanceCached: false, enhanceNotice: null }),
 
   setIsEnhancing: (v) => set({ isEnhancing: v }),
   setEnhanceCached: (v) => set({ enhanceCached: v }),
   setEnhanceNotice: (msg) => set({ enhanceNotice: msg }),
   updateMarkdown: (markdown) => set((s) => s.conversion ? { conversion: { ...s.conversion, markdown } } : {}),
-
-  setSidebarOpen: (open) => set({ sidebarOpen: open }),
 }))
-
-export function useAppInfo() {
-  return { name: APP_NAME }
-}

@@ -5,6 +5,7 @@ import 'dotenv/config';
 import connectDB from './model/mongodb.js';
 import { globalLimiter } from './middleware/rateLimiter.js';
 import { env } from './config/env.js';
+import { logger } from './utils/logger.js';
 
 // Import router for authentication endpoints (login, register, logout, refresh)
 import authRoutes from './routes/authRoutes.js'
@@ -40,10 +41,10 @@ app.use(errorHandler);
 try {
     connectDB();
 } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
+    logger.error('Failed to connect to MongoDB', error);
 }
 
 // Start the Express server on specified port
 app.listen(port, () => {
-    console.log(`Running on PORT:${port}`);
+    logger.info(`Running on PORT:${port}`);
 });

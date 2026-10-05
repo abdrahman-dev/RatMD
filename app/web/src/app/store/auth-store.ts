@@ -12,7 +12,6 @@ interface AuthState {
   logout: () => Promise<void>
   fetchMe: () => Promise<void>
   verifyEmail: (email: string, otp: string) => Promise<void>
-  clearSession: () => void
   updateUserData: (data: Partial<AuthUser>) => void
   updateProfile: (data: Partial<AuthUser>) => Promise<void>
 }
@@ -70,10 +69,6 @@ export const useAuthStore = create<AuthState>((set) => {
   verifyEmail: async (email: string, otp: string) => {
     await client.post<ApiResponse<never>>(AUTH.verifyEmail, { email, otp })
     await useAuthStore.getState().fetchMe()
-  },
-
-  clearSession: () => {
-    set({ user: null, isAuthenticated: false })
   },
 
   updateUserData: (data: Partial<AuthUser>) => {
