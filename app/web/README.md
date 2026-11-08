@@ -1,7 +1,7 @@
 # RatMD Frontend
 
-React 19 SPA for PDF-to-Markdown conversion, with auth, dashboard, community features, an
-animated background, light/dark theme, and a rat rank system. All PDF parsing happens in the
+React 19 SPA for PDF-to-Markdown conversion, with auth, dashboard, profile, and dark/light
+theme. All PDF parsing happens in the
 browser — files never leave the machine.
 
 ## Stack

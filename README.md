@@ -1,33 +1,27 @@
 # RatMD
 
-**PDF → Markdown, optimized for AI** — clean, token-efficient Markdown for LLM and RAG workflows.
+**PDF to Markdown, optimized for AI** — clean, token-efficient Markdown for LLM and RAG workflows.
 
-RatMD turns PDFs into structured Markdown in the browser. It is built for developers working with LLMs, RAG pipelines, and AI workflows who need clean input without uploading documents. Conversion works without an account; sign in to save conversion history and view savings.
+RatMD turns PDFs into structured Markdown entirely in the browser. It is built for developers working with LLMs, RAG pipelines, and AI workflows who need clean input without uploading documents. Conversion works without an account; sign in to save conversion history and track savings.
 
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square)](https://react.dev)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-[Live Demo](TODO_LIVE_URL) · [Report an issue](https://github.com/abdrahman-dev/RatMD/issues)
+[Live Demo](TODO_LIVE_URL)
 
 ## Screenshots
 
-![RatMD Converter — upload a PDF and get token-optimized Markdown](docs/screenshots/Converter.png)
-*Converter — client-side PDF to clean, token-efficient Markdown.*
+![RatMD Converter — upload a PDF and get token-optimized Markdown](docs/screenshots/converter.png)
+*Converter — client-side PDF to token-efficient Markdown.*
 
-![RatMD landing page](docs/screenshots/RatMD.png)
+![RatMD landing page](docs/screenshots/landing.png)
 *Landing page — what a new visitor sees first.*
-
-<!-- TODO: dashboard screenshot missing — add docs/screenshots/dashboard.png and replace this line -->
-**TODO:** Dashboard screenshot pending — expected at `docs/screenshots/dashboard.png` (not yet added).
 
 ## Features
 
-- **Client-side PDF parsing** — text extraction in the browser with `pdfjs-dist`; the PDF file never leaves your device.
-- **Markdown output** — structured, token-efficient Markdown with download and clipboard copy.
-- **Token estimation** — `js-tiktoken` `cl100k_base` counts with before/after comparison.
-- **Auth** — register, login, logout, and token refresh with httpOnly JWT cookies.
+- **Client-side PDF parsing** — text extraction in the browser with `pdfjs-dist`; the PDF never leaves your device.
+- **Markdown output** — structured Markdown with download and clipboard copy.
+- **Token estimation** — `cl100k_base` counts via `js-tiktoken`, with before/after comparison.
+- **Auth** — register, login, logout, and token refresh using httpOnly JWT cookies.
 - **Conversion history** — signed-in users can save conversion records.
-- **Dashboard** — total savings, conversion count, and paginated history.
+- **Dashboard** — total tokens saved, conversion count, and paginated history.
 
 ## Tech Stack
 
@@ -48,11 +42,11 @@ flowchart LR
   API --> DB[(MongoDB)]
 ```
 
-PDF parsing runs fully in the browser. The Express API is only used for accounts, conversion history, and stats — it never receives the PDF.
+PDF parsing runs fully in the browser. The Express API handles accounts, conversion history, and stats — it never receives the PDF.
 
-## Getting Started
+## Quick Start
 
-Prerequisites: Node.js 20+, npm 10+, and MongoDB (local or Atlas) for accounts/history. The converter itself runs without a backend.
+Prerequisites: Node.js 20+, npm 10+, and MongoDB (local or Atlas) for accounts/history. The converter works without a backend.
 
 ```bash
 git clone https://github.com/abdrahman-dev/RatMD.git
@@ -60,26 +54,24 @@ cd RatMD
 
 # Backend (terminal 1)
 cd services/auth
-cp .env.example .env
+cp .env.example .env    # fill in the three secrets
 npm install
-npm run dev
+npm run dev             # http://localhost:5000
 
 # Frontend (terminal 2)
 cd ../web
-cp .env.example .env
+cp .env.example .env    # optional — defaults to /api, proxied to :5000 in dev
 npm install
-npm run dev
+npm run dev             # http://localhost:5173
 ```
 
-Frontend dev server: `http://localhost:5173`. API dev server: `http://localhost:5000`. In dev, Vite proxies `/api` to `http://localhost:5000`, so the default `VITE_API_URL=/api` needs no CORS setup. Fill in the backend secrets in `services/auth/.env` (see below); generate them with:
+Generate secrets with:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-Scripts: `npm run dev` (both), `npm run build` + `npm run typecheck` + `npm run lint` (`app/web`), `npm start` (`services/auth`).
-
-Docker (`docker compose up -d --build`) serves the built frontend only — it does not start the API or database.
+Scripts: `npm run dev` (both packages), `npm run build`, `npm run typecheck`, `npm run lint` (`app/web`), `npm start` (`services/auth`).
 
 ## Environment Variables
 
@@ -92,9 +84,9 @@ Docker (`docker compose up -d --build`) serves the built frontend only — it do
 | `ACCESS_TOKEN_SECRET` | Yes | min 32 characters | Signs access tokens |
 | `REFRESH_TOKEN_SECRET` | Yes | min 32 characters | Signs refresh tokens |
 | `ENCRYPTION_SECRET` | Yes | min 32 characters | Encrypts stored OpenRouter keys |
-| `NODE_ENV` | No | `development` (one of `development\|production\|test`) | Runtime mode |
-| `ALLOWED_ORIGINS` | No | `http://localhost:5173` — comma-separated list | CORS allowlist (credentials enabled) |
-| `TRUST_PROXY` | No | `0` — non-negative integer (hops) | Set `>0` behind a proxy so rate limiting sees real client IP |
+| `NODE_ENV` | No | `development` | `development`, `production`, or `test` |
+| `ALLOWED_ORIGINS` | No | `http://localhost:5173` | Comma-separated CORS allowlist (credentials enabled) |
+| `TRUST_PROXY` | No | `0` | Proxy hop count for client IP behind a proxy |
 | `LLM_BASE_URL` | No | `https://openrouter.ai/api/v1` | OpenRouter base URL (optional enhancement) |
 | `LLM_MODEL` | No | `openai/gpt-4o-mini` | OpenRouter model (optional enhancement) |
 
@@ -102,36 +94,13 @@ Docker (`docker compose up -d --build`) serves the built frontend only — it do
 
 | Variable | Required | Default | Purpose |
 | --- | --- | --- | --- |
-| `VITE_API_URL` | No | `/api` | Backend API base URL; Vite proxies `/api` → `http://localhost:5000` in dev |
-
-## Deployment
-
-1. **MongoDB Atlas** — create a cluster and a database user; copy the `mongodb+srv://` connection string (replace `<password>` with the database user's password). Set it as `MONGODB_URL` on the backend.
-
-2. **Backend on Render** — New Web Service, root directory `services/auth`, build command `npm install`, start command `npm start`. Set these environment variables (generate secrets with `crypto.randomBytes(48)` — never reuse local values):
-
-   | Variable | Secret? | Value |
-   | --- | --- | --- |
-   | `MONGODB_URL` | Secret-ish (contains credentials) | Atlas connection string |
-   | `ACCESS_TOKEN_SECRET` | Yes | 48-byte random hex |
-   | `REFRESH_TOKEN_SECRET` | Yes | 48-byte random hex |
-   | `ENCRYPTION_SECRET` | Yes | 48-byte random hex |
-   | `PORT` | No | `5000` (or Render's default `PORT`) |
-   | `NODE_ENV` | No | `production` |
-   | `ALLOWED_ORIGINS` | No | `https://<your-frontend>.vercel.app` |
-   | `TRUST_PROXY` | No | `2` |
-   | `LLM_BASE_URL` | No | `https://openrouter.ai/api/v1` (optional) |
-   | `LLM_MODEL` | No | `openai/gpt-4o-mini` (optional) |
-
-3. **Frontend on Vercel** — New Project, root directory `app/web`, default Vite build. Set `VITE_API_URL` to `/api` (the API is reached through the Vercel rewrite). Replace `BACKEND_URL_PLACEHOLDER` in `app/web/vercel.json` with your Render URL (`https://<your-backend>.onrender.com`) — the `/api/:path*` rewrite must stay first, above the SPA fallback.
-
-   Re-deploy Vercel after updating `vercel.json`. Generate all secrets with `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"` and never commit them.
+| `VITE_API_URL` | No | `/api` | API base URL; Vite proxies `/api` → `localhost:5000` in dev |
 
 ## API Endpoints
 
-Base path is `/api`. History and profile routes require a valid access-token cookie; see `services/auth/README.md` for the full auth flow and models.
+Base path is `/api`. History and profile routes require a valid access-token cookie; see [services/auth](services/auth/README.md) for models and the full auth flow.
 
-| Method | Path | Auth required | Description |
+| Method | Path | Auth | Description |
 | --- | --- | --- | --- |
 | GET | `/api/auth/` | No | Health check |
 | POST | `/api/auth/register` | No | Create a new account |
@@ -141,46 +110,34 @@ Base path is `/api`. History and profile routes require a valid access-token coo
 | GET | `/api/auth/me` | Yes | Current user |
 | POST | `/api/auth/change-password` | Yes | Change password |
 | POST | `/api/conversions/save` | Yes | Save a conversion record |
-| POST | `/api/conversions/enhance` | Yes | Optional LLM cleanup of already-extracted Markdown (never the PDF) |
-| GET | `/api/conversions/history` | Yes | Paginated history (`?page=1&limit=10`) |
+| POST | `/api/conversions/enhance` | Yes | Optional LLM cleanup of extracted Markdown (never the PDF) |
+| GET | `/api/conversions/history` | Yes | Paginated history (`?page=1&limit=10`, `limit` ≤ 100) |
 | GET | `/api/conversions/stats` | Yes | Tokens saved, conversions, savings %, rank |
 | GET | `/api/profile` | Yes | Get user profile |
 | PUT | `/api/profile` | Yes | Update profile fields |
-| PUT | `/api/profile/llm-key` | Yes | Store or update an encrypted OpenRouter key |
+| PUT | `/api/profile/llm-key` | Yes | Store or update the encrypted OpenRouter key |
 | GET | `/api/community/leaderboard` | No | Top 20 users by tokens saved |
 | PUT | `/api/community/avatar` | Yes | Update avatar |
 | GET | `/api/community/profile/:userId` | No | Public profile |
 
-## Project Structure
+## Deployment
 
-```text
-RatMD/
-├── app/web/                # React SPA (Vite, TypeScript, Tailwind)
-│   └── src/                # router, stores, pages, features, lib (api/pdf/tokenizer)
-├── services/auth/          # Express + MongoDB API
-│   ├── app.js              # entry, CORS, trust-proxy, route mounts
-│   ├── routes/             # auth, conversions, profile, community
-│   ├── controllers/        # request handlers + Zod validation
-│   ├── model/              # Mongoose models + connectDB
-│   └── config/             # env validation (Zod), cookie options
-├── Dockerfile / docker-compose.yml / nginx.conf  # static frontend image (port 3000)
-└── README.md
-```
+1. **MongoDB Atlas** — create a cluster and database user; copy the `mongodb+srv://` connection string. Set it as `MONGODB_URL`.
+2. **Backend on Render** — new Web Service, root directory `services/auth`, build `npm install`, start `npm start`. Set `MONGODB_URL`, `ACCESS_TOKEN_SECRET`, `REFRESH_TOKEN_SECRET`, `ENCRYPTION_SECRET` (all secrets, generate with `crypto.randomBytes(48)` — never reuse local values), plus `NODE_ENV=production`, `ALLOWED_ORIGINS=https://<your-frontend>.vercel.app`, `TRUST_PROXY=2`. Optionally `LLM_BASE_URL` and `LLM_MODEL`.
+3. **Frontend on Vercel** — new project, root directory `app/web`, default Vite build. Set `VITE_API_URL=/api`. Replace `BACKEND_URL_PLACEHOLDER` in `app/web/vercel.json` with your Render URL (`https://<your-backend>.onrender.com`); the `/api/:path*` rewrite must stay first, above the SPA fallback. Re-deploy after editing `vercel.json`.
 
-Details: [app/web](app/web/README.md) · [services/auth](services/auth/README.md)
+## Limitations
 
-## Known Limitations
+- Heading detection is heuristic (font-size ratios); unusual PDFs can produce an incorrect hierarchy.
+- Text-only extraction: no image or table extraction, no OCR for scanned PDFs.
+- 10 MB web limit; token savings vary by document type (typically ~30–60% for heavily formatted PDFs).
+- Cookies use `sameSite: 'strict'`; a frontend on a different site than the API will not send them.
+- Docker serves the frontend only; run the API and database separately, or point `VITE_API_URL` at a deployed API.
 
-- Heading detection is heuristic (font-size ratios), so unusual PDFs can get the wrong hierarchy.
-- Text-only: no image or table extraction, no OCR for scanned PDFs.
-- 10 MB web limit; token savings vary by PDF (typically ~30–60% for heavily formatted docs).
-- Cookies use `sameSite: 'strict'`; frontends on a different site than the API will need a same-site setup.
-- Docker serves the frontend only; the API and database need to run separately (or point `VITE_API_URL` at a deployed API).
+## Roadmap
 
-## Roadmap (future)
-
-- **Go converter service** — a Go service for server-side PDF→Markdown conversion (future plan; no Go service exists yet).
-- OCR for scanned PDFs, image extraction, public conversion API, automated tests, leaderboard UI.
+- Go converter service — a Go service for server-side PDF → Markdown conversion (future; none exists yet)
+- OCR for scanned PDFs, image extraction, public conversion API, automated tests, leaderboard UI
 
 ## License
 

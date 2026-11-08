@@ -20,7 +20,7 @@ handling.
   key encrypted at rest and results cached by content hash
 - **Community features** — Leaderboard (top 20), public profiles, avatar management
 - **User profiles** — Bio, GitHub, LinkedIn links, avatar selection
-- **Rat rank system** — Automatic rank computation based on tokens saved (Rookie Rat → Rat King)
+- **Token rank system** — Automatic rank computation based on tokens saved (Rookie Rat → Rat King)
 
 ## Tech Stack
 
@@ -32,9 +32,6 @@ handling.
 | Validation | Zod 4 (env + request bodies)                              |
 | Security   | bcryptjs, express-rate-limit, cookie-parser, helmet, CORS |
 | LLM        | `openai` SDK pointed at OpenRouter (BYO key, optional)    |
-
-> **Note** — Verification and password-reset OTP flows were removed; register/login work
-> without email verification.
 
 ## Project Structure
 
@@ -95,8 +92,8 @@ npm install
 
 ### Environment Variables
 
-Configuration is validated by Zod at import time — the process exits with a descriptive error
-if anything is missing or malformed. Copy the template and fill it in:
+Configuration is validated by Zod at startup — the process throws before listening if
+anything is missing or malformed. Copy the template and fill it in:
 
 ```bash
 cp .env.example .env
@@ -179,7 +176,7 @@ Markdown is preserved if the call fails.
 | ------ | ------------------------- | ---- | -------------------------------------------------------------- |
 | GET    | `/api/profile`            | Yes  | Get full user profile                                          |
 | PUT    | `/api/profile`            | Yes  | Update profile (name, bio, github, linkedin, avatar)           |
-| PUT    | `/api/profile/llm-key`    | Yes  | Store or clear the user's OpenRouter key (encrypted at rest)   |
+| PUT    | `/api/profile/llm-key`    | Yes  | Store or update the user's OpenRouter key (encrypted at rest)   |
 
 ### Community
 
