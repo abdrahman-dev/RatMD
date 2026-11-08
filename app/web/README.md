@@ -28,7 +28,6 @@ browser — files never leave the machine.
 | `/faq`          | FaqPage        | Public      | 18-question accordion FAQ across 6 categories          |
 | `/login`        | LoginPage      | Public only | Email + password sign-in                               |
 | `/register`     | RegisterPage   | Public only | Name + email + password registration                  |
-| `/verify-email` | VerifyEmailPage| Public only | 6-digit OTP verification with resend cooldown          |
 | `/dashboard`    | DashboardPage  | Protected   | Stats cards and paginated conversion history           |
 | `/profile`      | ProfilePage    | Protected   | Avatar picker, bio/social form, OpenRouter API key    |
 
@@ -39,16 +38,18 @@ already authenticated.
 
 | Variable        | Description          | Default                     |
 | --------------- | -------------------- | --------------------------- |
-| `VITE_API_URL`  | Backend API base URL | `http://localhost:5000/api` |
+| `VITE_API_URL`  | Backend API base URL | `/api` |
 
 Create `.env.local` in `app/web/`:
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=/api
 ```
 
-This is optional — without it the client falls back to localhost. Set it explicitly when
-building for a deployed backend, otherwise the production bundle will point at localhost.
+This is optional — without it the client falls back to `/api`, which the Vite dev server
+proxies to `http://localhost:5000` (see `vite.config.ts`). Set it explicitly when building
+for a deployed backend, otherwise the production bundle will point at `/api` on the same
+origin.
 
 ## How to Run
 
@@ -113,8 +114,7 @@ src/
 
 ### CSS Variables (TailwindCSS v4 `@theme`)
 
-All colors use CSS variables — zero hardcoded hex in components. Defined in
-`src/styles/index.css`.
+Colors are defined as CSS variables in `src/styles/index.css` and referenced via `bg-*`/`text-*` utilities.
 
 | Token                    | Dark      | Light     |
 | ------------------------ | --------- | --------- |
@@ -124,8 +124,8 @@ All colors use CSS variables — zero hardcoded hex in components. Defined in
 | `--color-accent`         | `#39FF14` | `#1A7A05` |
 | `--color-accent-dim`     | `#2CBF10` | `#155E04` |
 | `--color-text`           | `#F0F0EE` | `#0A0A0A` |
-| `--color-text-dim`       | `#525252` | `#737373` |
-| `--color-text-dimmer`    | `#2E2E2E` | `#A3A3A3` |
+| `--color-text-dim`       | `#A8A8A8` | `#545454` |
+| `--color-text-dimmer`    | `#8C8C8C` | `#6A6A6A` |
 | `--color-border`         | `#1C1C1C` | `#D4D0C8` |
 | `--color-border-light`   | `#141414` | `#E0DDD6` |
 | `--color-success`        | `#22C55E` | `#16A34A` |
@@ -142,7 +142,7 @@ attribute and persists the choice to `localStorage` under `ratmd-theme`.
 
 ### Components
 
-- Sharp corners — `border-radius: 4px` max on inputs
+- Corners use `rounded-lg` for cards, buttons, and previews (`rounded-full` for pills and progress bars)
 - CTA buttons use `bg-accent text-background`
 - Surface cards use `bg-surface border border-border`
 - Framer Motion entrance: `opacity: 0 → 1, y: 20 → 0` on page mount
@@ -153,7 +153,7 @@ All API calls go through `src/lib/api/client.ts` — a fetch wrapper with:
 
 - `credentials: 'include'` on every request (httpOnly cookies)
 - Generic typing: `client.get<T>(url): Promise<T>`
-- Auto-clears auth state on 401 responses
+- On 401, refreshes the token once and retries the request (single-flight); clears auth state only if refresh fails
 - Methods: `get`, `post`, `put`, `delete`
 
 Endpoint paths are declared once in `src/lib/api/endpoints.ts`.

@@ -13,9 +13,8 @@ handling.
   Mongoose (400/409) errors
 - **Zod validation** — All inputs validated before hitting the database
 - **Rate limiting** — Global (100/15min), login (5/15min), register (10/hour), refresh
-  (20/15min), password reset (5/30min)
-- **Email verification via OTP** — Required before login; 10-minute expiry
-- **Password reset via OTP** — 10-minute expiry
+  (20/15min)
+- **Security headers** — `helmet` mounted on all responses
 - **Conversion tracking** — Save, paginated history, aggregate per-user stats
 - **LLM enhancement** — Optional OpenRouter cleanup of converted Markdown, with the user's
   key encrypted at rest and results cached by content hash
@@ -31,12 +30,11 @@ handling.
 | Database   | MongoDB + Mongoose 9                                      |
 | Auth       | JWT (jsonwebtoken), httpOnly cookies                      |
 | Validation | Zod 4 (env + request bodies)                              |
-| Security   | bcryptjs, express-rate-limit, cookie-parser, CORS        |
+| Security   | bcryptjs, express-rate-limit, cookie-parser, helmet, CORS |
 | LLM        | `openai` SDK pointed at OpenRouter (BYO key, optional)    |
 
-> **Note** — `helmet` is *not* mounted and email delivery is *not* wired up. Verification and
-> reset OTPs are written to the server console instead of being emailed, and are not gated
-> behind `NODE_ENV`. See the root README's Known Limitations before deploying.
+> **Note** — Verification and password-reset OTP flows were removed; register/login work
+> without email verification.
 
 ## Project Structure
 
@@ -48,7 +46,7 @@ services/auth/
 │   └── env.js                      # Zod env validation (PORT, MONGODB_URL, secrets)
 ├── controllers/
 │   ├── auth/
-│   │   ├── authController.js       # Register, login, logout, refresh, me, OTP, password
+│   │   ├── authController.js       # Register, login, logout, refresh, me, change password
 │   │   └── authValidation.js       # Zod schemas for all auth endpoints
 │   ├── conversion/
 │   │   ├── conversionController.js # Save, enhance, history (paginated), stats
@@ -112,6 +110,8 @@ cp .env.example .env
 | `REFRESH_TOKEN_SECRET` | Yes      | min 32 characters                 | JWT signing secret for refresh tokens    |
 | `ENCRYPTION_SECRET`    | Yes      | min 32 characters                 | AES-256-GCM key for stored OpenRouter keys |
 | `NODE_ENV`             | No       | `development`\|`production`\|`test` | Defaults to `development`                |
+| `ALLOWED_ORIGINS`      | No       | comma-separated list, defaults to `http://localhost:5173` | CORS allowlist (credentials enabled) |
+| `TRUST_PROXY`          | No       | non-negative integer, defaults to `0` | Proxy hop count for real client IP when behind a proxy |
 | `LLM_BASE_URL`         | No       | any string                        | Defaults to `https://openrouter.ai/api/v1` |
 | `LLM_MODEL`            | No       | any string                        | Defaults to `openai/gpt-4o-mini`        |
 
@@ -124,6 +124,8 @@ ACCESS_TOKEN_SECRET=your_access_token_secret_min_32_chars
 REFRESH_TOKEN_SECRET=your_refresh_token_secret_min_32_chars
 ENCRYPTION_SECRET=your_encryption_secret_min_32_chars
 NODE_ENV=development
+ALLOWED_ORIGINS=http://localhost:5173
+TRUST_PROXY=0
 ```
 
 Generate real secrets with:
@@ -156,10 +158,6 @@ npm start        # plain node
 | POST   | `/api/auth/logout`          | No   | global        | Revoke session          |
 | POST   | `/api/auth/refresh`         | No   | 20/15min      | Issue new access token  |
 | GET    | `/api/auth/me`              | Yes  | global        | Get current user        |
-| POST   | `/api/auth/verify-email`    | No   | 5/15min       | Verify email with OTP   |
-| POST   | `/api/auth/resend-otp`      | No   | 5/30min       | Resend verification OTP |
-| POST   | `/api/auth/forgot-password` | No   | 5/30min       | Request reset OTP       |
-| POST   | `/api/auth/reset-password`  | No   | 5/30min       | Reset password with OTP |
 | POST   | `/api/auth/change-password` | Yes  | global        | Change password         |
 
 ### Conversions
@@ -200,11 +198,6 @@ Markdown is preserved if the call fails.
 | `name`              | String  | —               | Required                                  |
 | `email`             | String  | —               | Required, unique                          |
 | `password`          | String  | —               | Required, bcrypt hashed                   |
-| `verifyOTP`         | String  | `null`          | Email verification OTP                    |
-| `verifyOTPExpire`   | Number  | `0`             | OTP expiry timestamp                      |
-| `isAccountVerified` | Boolean | `false`         | Email verified flag                       |
-| `resetOTP`          | String  | `null`          | Password reset OTP                        |
-| `resetOTPExpire`    | Number  | `0`             | OTP expiry timestamp                      |
 | `openRouterApiKey`  | String  | `null`          | AES-256-GCM ciphertext of the user's BYO key |
 | `totalTokensSaved`  | Number  | `0`             | Cumulative tokens saved                   |
 | `totalConversions`  | Number  | `0`             | Total conversions performed               |
@@ -278,14 +271,6 @@ Server marks the refresh token isRevoked: true in the DB
 Clears both cookies
 
 
-EMAIL VERIFICATION
---------------------------------------------------------------
-Register -> OTP generated and saved to the user document
-POST /verify-email { email, otp }
--> OTP verified -> isAccountVerified: true
--> Login now allowed
-
-
 RAT RANK THRESHOLDS
 --------------------------------------------------------------
 >= 1,000,000 -> Rat King
@@ -325,15 +310,13 @@ content. On any failure the client keeps the original Markdown.
 - **Server-side revocation** — Refresh tokens tracked in MongoDB with an `isRevoked` flag
 - **Token rotation** — Every refresh revokes the old token and issues a new pair
 - **Reuse detection** — Revokes all user sessions on suspicious token reuse
-- **Rate limiting** — Five dedicated limiters protect sensitive endpoints
+- **Rate limiting** — Four dedicated limiters protect sensitive endpoints
 - **Password security** — bcryptjs hashing (10 rounds), never stored or returned in plaintext
 - **Input validation** — Zod schemas enforce format requirements before any DB query
 - **Encrypted secrets at rest** — OpenRouter keys stored as AES-256-GCM ciphertext
 - **TTL index** — MongoDB auto-deletes expired refresh tokens
-- **CORS** — Restricted to a single frontend origin with credentials enabled
-
-**Not yet in place:** security response headers (`helmet`), OTP email delivery, and an
-env-driven CORS origin.
+- **CORS** — Allowlist from `ALLOWED_ORIGINS` (comma-separated, default `http://localhost:5173`) with credentials enabled
+- **Security headers** — `helmet` mounted
 
 ## Error Handling
 
