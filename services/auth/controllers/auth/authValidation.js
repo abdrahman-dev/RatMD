@@ -36,23 +36,6 @@ export const loginSchema = z.object({
         .max(100, "Password must be at most 100 characters")
 });
 
-export const forgotPasswordSchema = z.object({
-    email: z.string().email("Invalid email format")
-});
-
-export const resetPasswordSchema = z.object({
-    email: z.string().email("Invalid email format"),
-    otp: z.string().length(6, "OTP must be 6 digits").regex(/^\d+$/, "OTP must be numeric"),
-    password: z
-        .string()
-        .min(8, "Password must be at least 8 characters")
-        .max(100, "Password must be at most 100 characters")
-        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-        .regex(/[0-9]/, "Password must contain at least one number")
-        .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character")
-});
-
 export const changePasswordSchema = z.object({
     currentPassword: z.string().min(1, "Current password is required"),
     newPassword: z
@@ -66,13 +49,4 @@ export const changePasswordSchema = z.object({
 }).refine(data => data.currentPassword !== data.newPassword, {
     message: "New password must be different from current password",
     path: ["newPassword"]
-});
-
-export const verifyEmailSchema = z.object({
-    email: z.string().email("Invalid email format"),
-    otp: z.string().length(6, "OTP must be 6 digits").regex(/^\d+$/, "OTP must be numeric")
-});
-
-export const resendOTPSchema = z.object({
-    email: z.string().email("Invalid email format")
 });

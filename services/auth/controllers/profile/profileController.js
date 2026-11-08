@@ -7,7 +7,7 @@ const ALLOWED_AVATARS = ['rat_default', 'rat_ninja', 'rat_hacker', 'rat_king', '
 
 export const getProfile = async (req, res, next) => {
     try {
-        const user = await userModel.findById(req.user.userId).select('-password -verifyOTP -verifyOTPExpire -resetOTP -resetOTPExpire -isAccountVerified');
+        const user = await userModel.findById(req.user.userId).select('-password');
         if (!user) {
             return next(new AppError('User not found', 404));
         }
@@ -52,7 +52,7 @@ export const updateProfile = async (req, res, next) => {
             userId,
             updateFields,
             { new: true, runValidators: true }
-        ).select('-password -verifyOTP -verifyOTPExpire -resetOTP -resetOTPExpire -isAccountVerified');
+        ).select('-password');
 
         if (!user) {
             return next(new AppError('User not found', 404));

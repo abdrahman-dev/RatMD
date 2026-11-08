@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
@@ -19,10 +20,17 @@ import errorHandler from './middleware/errorHandler.js';
 const app = express();
 const port = env.PORT;
 
+if (env.TRUST_PROXY > 0) {
+    app.set('trust proxy', env.TRUST_PROXY);
+}
+
+// Security headers
+app.use(helmet());
+
 // Middleware setup for JSON parsing, CORS with frontend, and cookie handling
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 app.use(cors({
-  origin: 'http://localhost:5173', // or your frontend URL whatever it is 
+  origin: env.ALLOWED_ORIGINS,
   credentials: true               
 }));
 app.use(cookieParser());
@@ -39,9 +47,10 @@ app.use(errorHandler);
 
 // Establish connection to MongoDB database
 try {
-    connectDB();
+    await connectDB();
 } catch (error) {
     logger.error('Failed to connect to MongoDB', error);
+    process.exit(1);
 }
 
 // Start the Express server on specified port

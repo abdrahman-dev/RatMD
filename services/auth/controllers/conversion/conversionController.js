@@ -68,8 +68,10 @@ export const saveConversion = async (req, res, next) => {
 export const getConversionHistory = async (req, res, next) => {
     try {
         const userId = req.user.userId;
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const rawPage = parseInt(req.query.page, 10);
+        const rawLimit = parseInt(req.query.limit, 10);
+        const page = Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
+        const limit = Number.isFinite(rawLimit) && rawLimit >= 1 ? Math.min(100, Math.floor(rawLimit)) : 10;
         const skip = (page - 1) * limit;
 
         const conversions = await conversionModel

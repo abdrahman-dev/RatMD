@@ -36,6 +36,19 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
+
+  ALLOWED_ORIGINS: z
+    .string()
+    .default('http://localhost:5173')
+    .transform((value) => value.split(',').map((origin) => origin.trim()).filter(Boolean)),
+
+  TRUST_PROXY: z
+    .string()
+    .default('0')
+    .transform(Number)
+    .refine((value) => Number.isInteger(value) && value >= 0, {
+      message: "TRUST_PROXY must be a non-negative integer",
+    }),
 });
 
 export const env = envSchema.parse(process.env);
