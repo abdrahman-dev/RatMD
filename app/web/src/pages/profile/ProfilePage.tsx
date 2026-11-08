@@ -31,6 +31,16 @@ export function ProfilePage() {
   const [llmKeyMessageType, setLlmKeyMessageType] = useState<'success' | 'error'>('success')
 
   useEffect(() => {
+    if (!user) return
+    setName(user.name ?? '')
+    setBio(user.bio ?? '')
+    setGithub(user.github ?? '')
+    setLinkedin(user.linkedin ?? '')
+    setAvatar(user.avatar ?? 'rat_default')
+    setHasLlmKey(Boolean(user.hasLlmKey))
+  }, [user])
+
+  useEffect(() => {
     let cancelled = false
     async function loadHasLlmKey() {
       try {
@@ -145,7 +155,7 @@ export function ProfilePage() {
               type="text"
               value={name}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
+              className="w-full bg-surface-elevated border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
               required
             />
           </div>
@@ -161,7 +171,7 @@ export function ProfilePage() {
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)}
               maxLength={160}
               rows={3}
-              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent resize-none"
+              className="w-full bg-surface-elevated border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent resize-none"
               placeholder="Tell us about yourself..."
             />
             <p className="text-xs font-mono text-text-dimmer mt-1 text-right">{bio.length}/160</p>
@@ -177,7 +187,7 @@ export function ProfilePage() {
               type="url"
               value={github}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setGithub(e.target.value)}
-              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
+              className="w-full bg-surface-elevated border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
               placeholder="https://github.com/username"
             />
           </div>
@@ -192,7 +202,7 @@ export function ProfilePage() {
               type="url"
               value={linkedin}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setLinkedin(e.target.value)}
-              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
+              className="w-full bg-surface-elevated border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
               placeholder="https://linkedin.com/in/username"
             />
           </div>
@@ -239,7 +249,7 @@ export function ProfilePage() {
               type="password"
               value={llmKey}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setLlmKey(e.target.value)}
-              className="w-full bg-bg border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
+              className="w-full bg-surface-elevated border border-border text-text font-mono text-sm px-3 py-2 focus:outline-none focus:border-accent"
               placeholder={hasLlmKey ? '••••••••••••••••' : 'sk-or-v1-...'}
               autoComplete="off"
             />

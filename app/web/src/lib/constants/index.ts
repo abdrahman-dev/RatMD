@@ -10,7 +10,6 @@ export const ROUTES = {
   faq: '/faq',
   login: '/login',
   register: '/register',
-  verifyEmail: '/verify-email',
   dashboard: '/dashboard',
   profile: '/profile',
 } as const

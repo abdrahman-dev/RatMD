@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuthStore } from '@/app/store/auth-store'
+import { Button } from '@/components/ui/Button'
 import { client } from '@/lib/api/client'
 import { CONVERSIONS } from '@/lib/api/endpoints'
+import { ROUTES } from '@/lib/constants'
 import { formatNumber } from '@/lib/utils'
 import type { ConversionHistoryItem } from '@/types'
 
@@ -37,16 +40,20 @@ const AVATAR_INITIALS: Record<string, string> = {
 }
 
 export function DashboardPage() {
+  const navigate = useNavigate()
   const { user } = useAuthStore()
   const [stats, setStats] = useState<StatsResponse['stats'] | null>(null)
   const [history, setHistory] = useState<ConversionHistoryItem[]>([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [loadFailed, setLoadFailed] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
     async function loadData() {
       setLoading(true)
+      setLoadFailed(false)
       try {
         const [statsRes, historyRes] = await Promise.all([
           client.get<StatsResponse>(CONVERSIONS.stats),
@@ -56,13 +63,13 @@ export function DashboardPage() {
         setHistory(historyRes.conversions)
         setTotalPages(historyRes.pagination.totalPages)
       } catch {
-        // Fail silently — user sees empty state
+        setLoadFailed(true)
       } finally {
         setLoading(false)
       }
     }
     void loadData()
-  }, [page])
+  }, [page, retryCount])
 
   const avatarInitial = AVATAR_INITIALS[user?.avatar ?? 'rat_default'] ?? user?.name?.charAt(0).toUpperCase() ?? 'R'
 
@@ -122,19 +129,19 @@ export function DashboardPage() {
           <div className="bg-surface border border-border p-6" >
             <p className="text-xs font-mono text-text-dim mb-2">Total Tokens Saved</p>
             <p className="text-3xl font-mono font-bold text-accent">
-              {formatNumber(stats?.totalTokensSaved ?? 0)}
+              {loadFailed ? '-' : formatNumber(stats?.totalTokensSaved ?? 0)}
             </p>
           </div>
           <div className="bg-surface border border-border p-6" >
             <p className="text-xs font-mono text-text-dim mb-2">Total Conversions</p>
             <p className="text-3xl font-mono font-bold text-accent">
-              {formatNumber(stats?.totalConversions ?? 0)}
+              {loadFailed ? '-' : formatNumber(stats?.totalConversions ?? 0)}
             </p>
           </div>
           <div className="bg-surface border border-border p-6" >
             <p className="text-xs font-mono text-text-dim mb-2">Avg Savings %</p>
             <p className="text-3xl font-mono font-bold text-accent">
-              {stats?.avgSavingsPercent ?? 0}%
+              {loadFailed ? '-' : `${stats?.avgSavingsPercent ?? 0}%`}
             </p>
           </div>
         </div>
@@ -145,9 +152,31 @@ export function DashboardPage() {
             <h2 className="text-lg font-mono font-bold text-text">Conversion History</h2>
           </div>
 
-          {history.length === 0 ? (
-            <div className="px-4 sm:px-6 py-12 text-center">
+          {loadFailed ? (
+            <div className="px-4 sm:px-6 py-12 text-center space-y-4">
+              <div className="flex items-center justify-center gap-2" role="alert">
+                <span className="text-danger text-sm font-mono">!</span>
+                <p className="text-sm font-mono text-danger">Couldn&apos;t load history</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setRetryCount((n) => n + 1)}
+                disabled={loading}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : history.length === 0 ? (
+            <div className="px-4 sm:px-6 py-12 text-center space-y-4">
               <p className="text-sm font-mono text-text-dim">No conversions yet — drop a PDF in the converter to get started.</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(ROUTES.converter)}
+              >
+                Go to converter
+              </Button>
             </div>
           ) : (
             <>

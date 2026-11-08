@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
 import { ROUTES } from '@/lib/constants'
@@ -16,6 +17,16 @@ const streaks = Array.from({ length: 12 }, (_, i) => ({
 
 export function HeroSection() {
   const navigate = useNavigate()
+  const shouldReduceMotion = useReducedMotion()
+  const [isHidden, setIsHidden] = useState(false)
+
+  useEffect(() => {
+    const onChange = () => setIsHidden(document.hidden)
+    document.addEventListener('visibilitychange', onChange)
+    return () => document.removeEventListener('visibilitychange', onChange)
+  }, [])
+
+  const paused = shouldReduceMotion || isHidden
   return (
     <section className="relative overflow-hidden pt-20 pb-16 sm:pt-28 sm:pb-20">
       {/* Animated light streaks */}
@@ -31,12 +42,12 @@ export function HeroSection() {
               rotate: `${s.rotation}deg`,
               background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)',
             }}
-            animate={{
+            animate={paused ? { opacity: 0.2 } : {
               x: [0, 40, 0, -40, 0],
               y: [0, -20, 0, 20, 0],
               opacity: [0, 0.5, 0.2, 0.6, 0],
             }}
-            transition={{
+            transition={paused ? { duration: 0 } : {
               duration: s.duration,
               delay: s.delay,
               repeat: Infinity,
@@ -56,11 +67,11 @@ export function HeroSection() {
               rotate: `${35 + i * 8}deg`,
               background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)',
             }}
-            animate={{
+            animate={paused ? { opacity: 0.2 } : {
               x: [0, -30, 0, 30, 0],
               opacity: [0, 0.3, 0.1, 0.4, 0],
             }}
-            transition={{
+            transition={paused ? { duration: 0 } : {
               duration: 30 + i * 5,
               delay: i * 3,
               repeat: Infinity,
@@ -82,8 +93,8 @@ export function HeroSection() {
             <motion.span
               className="w-1.5 h-1.5 block"
               style={{ backgroundColor: 'var(--color-accent)', boxShadow: '0 0 6px var(--color-accent)' }}
-              animate={{ opacity: [1, 0.4, 1] }}
-              transition={{ duration: 2.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
+              animate={paused ? { opacity: 1 } : { opacity: [1, 0.4, 1] }}
+              transition={paused ? { duration: 0 } : { duration: 2.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
             />
             <span className="text-xs font-mono">
               <span className="text-accent">v0.1.0</span>
@@ -96,15 +107,15 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text font-sans leading-tight"
+            className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text font-sans leading-tight max-w-2xl"
           >
-            Stop feeding your AI<br />
+            Stop feeding your AI{' '}
             <span
               className="text-accent"
               style={{ textShadow: '0 0 40px var(--color-accent-glow)' }}
             >
               clean AI-ready
-            </span><br />
+            </span>{' '}
             junk.
           </motion.h1>
 

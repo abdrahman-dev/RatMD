@@ -6,12 +6,12 @@ import type { AuthUser, ApiResponse } from '@/types'
 interface AuthState {
   user: AuthUser | null
   isAuthenticated: boolean
+  isInitializing: boolean
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   register: (name: string, email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   fetchMe: () => Promise<void>
-  verifyEmail: (email: string, otp: string) => Promise<void>
   updateUserData: (data: Partial<AuthUser>) => void
   updateProfile: (data: Partial<AuthUser>) => Promise<void>
 }
@@ -24,6 +24,7 @@ export const useAuthStore = create<AuthState>((set) => {
   return {
   user: null,
   isAuthenticated: false,
+  isInitializing: true,
   isLoading: false,
 
   login: async (email: string, password: string) => {
@@ -40,6 +41,7 @@ export const useAuthStore = create<AuthState>((set) => {
     set({ isLoading: true })
     try {
       await client.post<ApiResponse<never>>(AUTH.register, { name, email, password })
+      await useAuthStore.getState().fetchMe()
     } finally {
       set({ isLoading: false })
     }
@@ -63,12 +65,9 @@ export const useAuthStore = create<AuthState>((set) => {
       }
     } catch {
       set({ user: null, isAuthenticated: false })
+    } finally {
+      set({ isInitializing: false })
     }
-  },
-
-  verifyEmail: async (email: string, otp: string) => {
-    await client.post<ApiResponse<never>>(AUTH.verifyEmail, { email, otp })
-    await useAuthStore.getState().fetchMe()
   },
 
   updateUserData: (data: Partial<AuthUser>) => {

@@ -2,9 +2,8 @@ export const AUTH = {
   login: '/auth/login',
   register: '/auth/register',
   logout: '/auth/logout',
+  refresh: '/auth/refresh',
   me: '/auth/me',
-  verifyEmail: '/auth/verify-email',
-  resendOtp: '/auth/resend-otp',
 } as const
 
 export const CONVERSIONS = {

@@ -52,7 +52,8 @@ export function AnimatedBackground() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let rafId: number
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let rafId: number | null = null
     let width = window.innerWidth
     let height = window.innerHeight
     let scanY = -16
@@ -139,20 +140,59 @@ export function AnimatedBackground() {
       rafId = requestAnimationFrame(draw)
     }
 
+    function start() {
+      if (reducedMotion || document.hidden || rafId !== null) return
+      rafId = requestAnimationFrame(draw)
+    }
+
+    function stop() {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+        rafId = null
+      }
+    }
+
+    function drawOnce() {
+      const p = paletteRef.current
+      ctx!.fillStyle = p.bg
+      ctx!.fillRect(0, 0, width, height)
+      for (const particle of particles) {
+        ctx!.beginPath()
+        ctx!.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
+        ctx!.fillStyle = particle.color
+        ctx!.fill()
+      }
+    }
+
+    function onVisibilityChange() {
+      if (document.hidden) {
+        stop()
+      } else {
+        start()
+      }
+    }
+
     resize()
     initParticles()
-    draw()
+    if (reducedMotion) {
+      drawOnce()
+    } else {
+      start()
+    }
 
     const observer = new MutationObserver(() => {
       paletteRef.current = getPalette()
       initParticles()
+      if (reducedMotion) drawOnce()
     })
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
     window.addEventListener('resize', resize)
+    document.addEventListener('visibilitychange', onVisibilityChange)
     return () => {
-      cancelAnimationFrame(rafId)
+      stop()
       window.removeEventListener('resize', resize)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
       observer.disconnect()
     }
   }, [])

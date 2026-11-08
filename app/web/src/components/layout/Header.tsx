@@ -80,7 +80,7 @@ export function Header() {
         </Link>
 
         {/* Nav links — center (desktop) */}
-        <nav className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2 gap-1">
+        <nav className="hidden lg:flex items-center absolute left-1/2 -translate-x-1/2 gap-1">
           {internalLinks.map((link) => {
             const isActive = location.pathname === link.href
             return (
@@ -101,19 +101,19 @@ export function Header() {
         </nav>
 
         {/* Right section — desktop */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-2">
           <a
             href="https://github.com/abdrahman-dev/RatMD"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1.5 text-text-dim hover:text-text transition-colors duration-150"
+            className="p-1.5 min-w-[40px] min-h-[40px] flex items-center justify-center text-text-dim hover:text-text transition-colors duration-150"
             aria-label="GitHub"
           >
             <GitHubIcon />
           </a>
           <button
             onClick={toggle}
-            className="p-1.5 text-text-dim hover:text-text transition-colors duration-150"
+            className="p-1.5 min-w-[40px] min-h-[40px] flex items-center justify-center text-text-dim hover:text-text transition-colors duration-150"
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
@@ -123,7 +123,7 @@ export function Header() {
             <div ref={dropdownRef} className="relative">
               <button
                 onClick={() => setDropdownOpen((p) => !p)}
-                className="flex items-center gap-1.5 pl-2 pr-2 py-1 text-text-dim hover:text-text transition-colors duration-150"
+                className="flex items-center gap-1.5 pl-2 pr-2 py-1 min-h-[40px] text-text-dim hover:text-text transition-colors duration-150"
                 aria-label="User menu"
               >
                 <span className="w-5 h-5 flex items-center justify-center bg-accent/10 text-accent text-[10px] font-mono font-bold">
@@ -176,36 +176,44 @@ export function Header() {
               </AnimatePresence>
             </div>
           ) : (
-            <Link
-              to={ROUTES.login}
-              className="text-xs font-mono text-accent hover:text-text transition-colors duration-150"
-            >
-              Get Started Free
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                to={ROUTES.converter}
+                className="text-xs font-mono text-accent hover:text-text transition-colors duration-150"
+              >
+                Try the converter
+              </Link>
+              <Link
+                to={ROUTES.login}
+                className="text-xs font-mono text-text-dim hover:text-text transition-colors duration-150"
+              >
+                Sign in
+              </Link>
+            </div>
           )}
         </div>
 
         {/* Mobile menu button */}
-        <div className="flex md:hidden items-center gap-1">
+        <div className="flex lg:hidden items-center gap-1">
           <a
             href="https://github.com/abdrahman-dev/RatMD"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1.5 text-text-dim hover:text-text transition-colors duration-150"
+            className="p-1.5 min-w-[40px] min-h-[40px] flex items-center justify-center text-text-dim hover:text-text transition-colors duration-150"
             aria-label="GitHub"
           >
             <GitHubIcon />
           </a>
           <button
             onClick={toggle}
-            className="p-1.5 text-text-dim hover:text-text transition-colors duration-150"
+            className="p-1.5 min-w-[40px] min-h-[40px] flex items-center justify-center text-text-dim hover:text-text transition-colors duration-150"
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </button>
           <button
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="p-1.5 text-text-dim hover:text-text transition-colors duration-150"
+            className="p-1.5 min-w-[40px] min-h-[40px] flex items-center justify-center text-text-dim hover:text-text transition-colors duration-150"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-4 h-4">
@@ -231,7 +239,7 @@ export function Header() {
             animate={{ opacity: 1, maxHeight: 400 }}
             exit={{ opacity: 0, maxHeight: 0 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="overflow-hidden md:hidden bg-bg/95 backdrop-blur-md border-b border-border"
+            className="overflow-hidden lg:hidden bg-bg/95 backdrop-blur-md border-b border-border"
           >
             <div className="max-w-[1100px] mx-auto px-6 py-2 flex flex-col gap-1">
               {internalLinks.map((link) => {
@@ -287,13 +295,22 @@ export function Header() {
                   </button>
                 </>
               ) : (
-                <Link
-                  to={ROUTES.login}
-                  onClick={() => setMobileOpen(false)}
-                  className="px-3 py-2.5 text-sm font-mono text-accent hover:text-text transition-colors border-t border-border mt-1 min-h-[40px] flex items-center"
-                >
-                  Get Started Free
-                </Link>
+                <div className="flex items-center gap-3 px-3 py-2.5 border-t border-border mt-1 min-h-[40px]">
+                  <Link
+                    to={ROUTES.converter}
+                    onClick={() => setMobileOpen(false)}
+                    className="px-3 py-2.5 text-sm font-mono text-accent hover:text-text transition-colors min-h-[40px] flex items-center"
+                  >
+                    Try the converter
+                  </Link>
+                  <Link
+                    to={ROUTES.login}
+                    onClick={() => setMobileOpen(false)}
+                    className="px-3 py-2.5 text-sm font-mono text-text-dim hover:text-text transition-colors min-h-[40px] flex items-center"
+                  >
+                    Sign in
+                  </Link>
+                </div>
               )}
             </div>
           </motion.div>

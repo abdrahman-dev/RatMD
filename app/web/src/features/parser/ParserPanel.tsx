@@ -63,8 +63,8 @@ export function ParserPanel({ isConverting, error }: ParserPanelProps) {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="bg-surface border border-border overflow-y-auto"
-          style={{ borderRadius: '4px', maxHeight: '180px' }}
+          className="bg-surface border border-border overflow-y-auto rounded-lg"
+          style={{ maxHeight: '180px' }}
         >
           <div className="p-3 space-y-1">
             {parsingStages.map((stage, i) => (
@@ -85,9 +85,11 @@ export function ParserPanel({ isConverting, error }: ParserPanelProps) {
                   <motion.span
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-xs font-mono text-accent"
+                    className="text-xs font-mono text-accent inline-flex"
                   >
-                    ✓
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
                   </motion.span>
                 )}
                 {i === currentStage && !completedStages.includes(i) && (

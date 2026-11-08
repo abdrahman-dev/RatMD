@@ -27,7 +27,7 @@ export function CLIPreviewSection() {
       <div className="max-w-2xl mx-auto">
         <Card variant="elevated" className="overflow-hidden">
           {/* Terminal header */}
-          <div className="flex items-center gap-2 px-4 py-2.5 bg-black/40 border-b border-border">
+          <div className="flex items-center gap-2 px-4 py-2.5 bg-surface-elevated border-b border-border">
             <span className="w-2.5 h-2.5 rounded-full bg-danger/60" />
             <span className="w-2.5 h-2.5 rounded-full bg-warning/60" />
             <span className="w-2.5 h-2.5 rounded-full bg-text-dimmer/60" />
@@ -64,7 +64,7 @@ export function CLIPreviewSection() {
 
       <AnimatedElement delay={0.3}>
         <p className="text-center text-xs font-mono text-text-dimmer mt-6">
-          ⚡ Web app is live. CLI dropping soon.
+          Web app is live. CLI dropping soon.
         </p>
       </AnimatedElement>
     </Section>

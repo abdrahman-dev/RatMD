@@ -41,7 +41,7 @@ export function TokenSavingsSection() {
             <div className="flex items-center justify-between">
               <span className="text-sm font-mono text-text-dim">Before</span>
               <span className="text-xs font-mono px-2 py-0.5 rounded bg-surface border border-border text-text-dimmer">
-                PDF
+                Example
               </span>
             </div>
             <div>
@@ -86,7 +86,7 @@ export function TokenSavingsSection() {
 
       <AnimatedElement delay={0.2}>
         <p className="text-center text-xs font-mono text-text-dimmer mt-8">
-          Results vary by PDF type. Dense docs save more.
+          Example — results vary by PDF type. Dense docs save more.
         </p>
       </AnimatedElement>
     </Section>

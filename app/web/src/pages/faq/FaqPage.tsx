@@ -82,7 +82,7 @@ const faqData: FaqCategory[] = [
       },
       {
         q: 'Do you store my files or converted output?',
-        a: 'No. RatMD has no backend storage in its current form. Files and converted Markdown exist only in your browser\'s memory during the session. Closing the tab clears everything. Future versions may offer optional cloud storage, but it will always be opt-in.',
+        a: 'Your file stays on your device — RatMD parses PDFs entirely in your browser and the PDF itself is never uploaded. When you\'re signed in, only conversion history and stats are saved to your account, and optional AI Enhance sends only the extracted Markdown.',
       },
     ],
   },
@@ -104,11 +104,11 @@ const faqData: FaqCategory[] = [
     items: [
       {
         q: 'What features are planned?',
-        a: 'The immediate roadmap includes: CLI tools, OCR for scanned PDFs, a public REST API, batch processing improvements, custom output templates, and configurable noise-removal rules. Longer term: team workspaces, persistent conversion history, and API key management.',
+        a: 'Conversion history and OpenRouter key storage are already live. Still planned: CLI tools, OCR for scanned PDFs, a public conversion API, batch improvements, output templates, and configurable cleanup rules. Longer term: team workspaces and usage controls for heavy use.',
       },
       {
         q: 'Will there be an API?',
-        a: 'Yes. A REST API is planned for programmatic access. It will support the same conversion pipeline with authentication via API keys, webhook notifications for large files, and usage tracking. The frontend service layer is already structured to support this transition.',
+        a: 'An account API already powers sign-in, history, and stats, but there is no public PDF-to-Markdown API yet. A future public API would use API keys and keep PDF parsing local-first — you would never need to upload your PDF for basic conversion.',
       },
       {
         q: 'Is RatMD open source?',

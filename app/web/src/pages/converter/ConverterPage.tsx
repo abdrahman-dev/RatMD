@@ -22,6 +22,8 @@ export function ConverterPage() {
   const { isAuthenticated } = useAuthStore()
   const [saveBannerDismissed, setSaveBannerDismissed] = useState(false)
   const [hasLlmKey, setHasLlmKey] = useState(false)
+  const [saveFailed, setSaveFailed] = useState(false)
+  const [isRetryingSave, setIsRetryingSave] = useState(false)
   const hasSavedRef = useRef<string | null>(null)
 
   const handleConvert = useCallback(async () => {
@@ -33,6 +35,8 @@ export function ConverterPage() {
     upload.reset()
     useAppStore.getState().reset()
     setSaveBannerDismissed(false)
+    setSaveFailed(false)
+    setIsRetryingSave(false)
     hasSavedRef.current = null
   }, [upload])
 
@@ -89,30 +93,45 @@ export function ConverterPage() {
     }
   }, [conversion, setIsEnhancing, setEnhanceCached, setEnhanceNotice, updateMarkdown])
 
-  useEffect(() => {
-    if (!isAuthenticated || !conversion) return
-    const key = `${conversion.fileName}-${conversion.timestamp}`
-    if (hasSavedRef.current === key) return
-    hasSavedRef.current = key
-
-    void (async () => {
-      let contentHash: string | undefined
-      try {
-        contentHash = await sha256Hex(conversion.markdown)
-      } catch {
-        contentHash = undefined
-      }
-      client.post(CONVERSIONS.save, {
+  const saveToHistory = useCallback(async () => {
+    if (!conversion) return
+    let contentHash: string | undefined
+    try {
+      contentHash = await sha256Hex(conversion.markdown)
+    } catch {
+      contentHash = undefined
+    }
+    try {
+      await client.post(CONVERSIONS.save, {
         filename: conversion.fileName,
         originalTokens: conversion.estimation.originalTokens,
         optimizedTokens: conversion.estimation.optimizedTokens,
         savingsPercent: conversion.estimation.savingsPercentage,
         ...(contentHash ? { contentHash } : {}),
-      }).catch(() => {
-        // Silently fail — conversion result is already shown
       })
-    })()
-  }, [isAuthenticated, conversion])
+      setSaveFailed(false)
+    } catch {
+      setSaveFailed(true)
+    }
+  }, [conversion])
+
+  const handleRetrySave = useCallback(async () => {
+    setIsRetryingSave(true)
+    try {
+      await saveToHistory()
+    } finally {
+      setIsRetryingSave(false)
+    }
+  }, [saveToHistory])
+
+  useEffect(() => {
+    if (!isAuthenticated || !conversion) return
+    const key = `${conversion.fileName}-${conversion.timestamp}`
+    if (hasSavedRef.current === key) return
+    hasSavedRef.current = key
+    setSaveFailed(false)
+    void saveToHistory()
+  }, [isAuthenticated, conversion, saveToHistory])
 
   return (
     <Container className="py-10">
@@ -179,10 +198,12 @@ export function ConverterPage() {
                       </Link>
                       <button
                         onClick={() => setSaveBannerDismissed(true)}
-                        className="text-xs text-text-dimmer font-mono hover:text-text-dim cursor-pointer"
+                        className="text-xs text-text-dimmer hover:text-text-dim cursor-pointer inline-flex p-1"
                         aria-label="Dismiss"
                       >
-                        ✕
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
                       </button>
                     </div>
                   </div>
@@ -194,6 +215,20 @@ export function ConverterPage() {
                   originalChars={conversion.estimation.originalChars}
                   optimizedChars={conversion.estimation.optimizedChars}
                 />
+                {saveFailed && (
+                  <div className="flex items-center gap-2 p-3 rounded bg-danger/5 border border-danger/20" role="alert">
+                    <span className="text-danger text-sm font-mono">!</span>
+                    <span className="text-sm text-danger font-mono flex-1">Converted, but saving to history failed</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRetrySave}
+                      disabled={isRetryingSave}
+                    >
+                      {isRetryingSave ? 'Retrying…' : 'Retry'}
+                    </Button>
+                  </div>
+                )}
                 {isAuthenticated && hasLlmKey ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">

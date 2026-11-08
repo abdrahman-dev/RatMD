@@ -23,7 +23,7 @@ const webGuide = [
   },
   {
     title: '3. Review',
-    desc: 'Preview the output in the Markdown panel. Check the token savings indicator — typically 60–80% reduction.',
+    desc: 'Preview the output in the Markdown panel. Check the token savings indicator — typically 30–60% reduction, varying by PDF.',
   },
   {
     title: '4. Export',
@@ -69,9 +69,9 @@ export function DocsPage() {
 
         {/* CLI Reference */}
         <Section id="cli-ref" className="!p-0 !pb-10">
-          <h2 className="text-lg font-bold text-text font-sans mb-6">CLI Reference</h2>
+          <h2 className="text-lg font-bold text-text font-sans mb-6">CLI (Planned)</h2>
           <Card variant="elevated" className="overflow-hidden">
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-black/40 border-b border-border">
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-surface-elevated border-b border-border">
               <span className="w-2.5 h-2.5 rounded-full bg-danger/60" />
               <span className="w-2.5 h-2.5 rounded-full bg-warning/60" />
               <span className="w-2.5 h-2.5 rounded-full bg-text-dimmer/60" />
