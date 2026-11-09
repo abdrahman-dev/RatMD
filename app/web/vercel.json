@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://BACKEND_URL_PLACEHOLDER/api/:path*"
+      "destination": "https://ratmd-production.up.railway.app/api/:path*"
     },
     {
       "source": "/(.*)",

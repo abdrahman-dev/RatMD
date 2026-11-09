@@ -124,7 +124,7 @@ Base path is `/api`. History and profile routes require a valid access-token coo
 
 1. **MongoDB Atlas** — create a cluster and database user; copy the `mongodb+srv://` connection string. Set it as `MONGODB_URL`.
 2. **Backend on Render** — new Web Service, root directory `services/auth`, build `npm install`, start `npm start`. Set `MONGODB_URL`, `ACCESS_TOKEN_SECRET`, `REFRESH_TOKEN_SECRET`, `ENCRYPTION_SECRET` (all secrets, generate with `crypto.randomBytes(48)` — never reuse local values), plus `NODE_ENV=production`, `ALLOWED_ORIGINS=https://<your-frontend>.vercel.app`, `TRUST_PROXY=2`. Optionally `LLM_BASE_URL` and `LLM_MODEL`.
-3. **Frontend on Vercel** — new project, root directory `app/web`, default Vite build. Set `VITE_API_URL=/api`. Replace `BACKEND_URL_PLACEHOLDER` in `app/web/vercel.json` with your Render URL (`https://<your-backend>.onrender.com`); the `/api/:path*` rewrite must stay first, above the SPA fallback. Re-deploy after editing `vercel.json`.
+3. **Frontend on Vercel** — new project, root directory `app/web`, default Vite build. Set `VITE_API_URL` to `/api`. `app/web/vercel.json` rewrites `/api/:path*` to the Railway backend (`https://ratmd-production.up.railway.app`), keeping that rewrite first and above the SPA fallback. Re-deploy after editing `vercel.json`.
 
 ## Limitations
 
