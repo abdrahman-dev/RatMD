@@ -4,7 +4,7 @@
 
 RatMD turns PDFs into structured Markdown entirely in the browser. It is built for developers working with LLMs, RAG pipelines, and AI workflows who need clean input without uploading documents. Conversion works without an account; sign in to save conversion history and track savings.
 
-[Live Demo](TODO_LIVE_URL)
+[Live Demo](https://rat-md.vercel.app)
 
 ## Screenshots
 
